@@ -151,6 +151,38 @@ image-slot {
 .lae-navlinks a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
 @media (max-width: 900px) { .lae-navlinks { display: none; } }
 
+/* ---- Nav actions + mobile burger ---------------------------------------- */
+.lae-nav__actions { display: flex; align-items: center; gap: 10px; }
+.lae-nav__burger {
+  display: none; background: none; border: none; cursor: pointer;
+  color: var(--ink); padding: 6px; border-radius: 8px;
+  transition: background .2s ease; line-height: 0;
+}
+.lae-nav__burger:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+@media (max-width: 900px) {
+  .lae-nav__burger { display: grid; place-items: center; }
+  .lae-nav__quote-btn { display: none !important; }
+  .lae-nav__call { display: none !important; }
+}
+.lae-nav__mobile-menu {
+  background: color-mix(in srgb, var(--surface) 97%, transparent);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+  padding: 12px var(--pad) 20px;
+  display: flex; flex-direction: column; gap: 2px;
+  position: relative; z-index: 59;
+}
+.lae-nav__mobile-menu > a {
+  display: block; padding: 13px 16px; border-radius: 100px;
+  font-size: 1rem; font-weight: 550; color: var(--ink-soft);
+  transition: color .2s ease, background .2s ease;
+}
+.lae-nav__mobile-menu > a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.lae-nav__mobile-ctas {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--line);
+}
+
 /* ---- Hero ---------------------------------------------------------------- */
 .lae-hero { position: relative; padding-top: clamp(112px, 14vh, 168px); padding-bottom: clamp(50px, 7vw, 96px); overflow: hidden; }
 .lae-hero__halo { position: absolute; z-index: 0; border-radius: 50%; filter: blur(60px); opacity: .5; pointer-events: none; }
@@ -381,6 +413,14 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 @keyframes floaty { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-9px); } }
 .floaty { animation: floaty 6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce){ .floaty { animation: none; } .lae-btn__arrow, .lae-faq__icon { transition: none; } }
+
+/* ---- Survey section container ------------------------------------------- */
+.lae-survey-section {
+  background: color-mix(in srgb, var(--accent) 11%, var(--surface-2));
+  border-top: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.lae-survey-section .lae-eyebrow { color: color-mix(in srgb, var(--accent) 90%, var(--ink)); }
 
 /* ---- Survey funnel (quick lead capture after hero) ----------------------- */
 .lae-survey { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-xl);
