@@ -17,8 +17,9 @@ const TOTAL_STEPS = 4;
 
 function QuickSurvey({ onQuote }) {
   const [step, setStepS] = useStateC(1);
-  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "" });
+  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "", email: "" });
   const [sent, setSentS] = useStateC(false);
+  const [phoneErr, setPhoneErr] = useStateC("");
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }));
   const progress = `${Math.round((step / TOTAL_STEPS) * 100)}%`;
@@ -27,16 +28,21 @@ function QuickSurvey({ onQuote }) {
   const back = () => setStepS((s) => Math.max(s - 1, 1));
 
   const submit = async () => {
-    if (!answers.phone.trim()) return;
+    const digits = answers.phone.replace(/\D/g, "");
+    if (!digits || digits.length < 8) {
+      setPhoneErr("Please enter a valid phone number (min 8 digits).");
+      return;
+    }
+    setPhoneErr("");
     track("survey_submit", { occasion: answers.occasion, guests: answers.guests });
     try {
       await fetch("/api/survey", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(answers),
+        body: JSON.stringify({ ...answers, phone: "+47 " + answers.phone }),
       });
     } catch (_) {}
-    setSentS(true);
+    window.location.href = "/thank-you";
     // pre-fill the main quote form with survey data
     setTimeout(() => {
       const nameEl = document.getElementById("f-name");
@@ -55,7 +61,7 @@ function QuickSurvey({ onQuote }) {
 
   if (sent) {
     return (
-      <section className="lae-section lae-section--tight" id="survey">
+      <section className="lae-section lae-section--tight lae-survey-section" id="survey">
         <div className="lae-wrap" style={{ maxWidth: 860 }}>
           <div className="lae-survey">
             <div className="lae-survey__progress"><div className="lae-survey__progress-fill" style={{ width: "100%" }} /></div>
@@ -80,7 +86,7 @@ function QuickSurvey({ onQuote }) {
   }
 
   return (
-    <section className="lae-section lae-section--tight" id="survey">
+    <section className="lae-section lae-section--tight lae-survey-section" id="survey">
       <div className="lae-wrap" style={{ maxWidth: 860 }}>
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
@@ -160,17 +166,27 @@ function QuickSurvey({ onQuote }) {
               {step === 4 && (
                 <>
                   <p className="lae-survey__q">Last step — how do we reach you?</p>
-                  <p className="lae-survey__sub">We'll send a menu recommendation, no spam.</p>
-                  <div className="lae-survey__fields">
+                  <p className="lae-survey__sub">We'll send a personalised menu recommendation. No spam, ever.</p>
+                  <div className="lae-survey__fields" style={{ gridTemplateColumns: "1fr 1fr" }}>
                     <div className="lae-field">
-                      <label htmlFor="sv-name">Your name</label>
-                      <input id="sv-name" className="lae-input" value={answers.name} placeholder="First name"
+                      <label htmlFor="sv-name">Full name</label>
+                      <input id="sv-name" className="lae-input" value={answers.name} placeholder="Your full name"
                         onChange={(e) => set("name", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                     <div className="lae-field">
+                      <label htmlFor="sv-email">Email address</label>
+                      <input id="sv-email" className="lae-input" value={answers.email} placeholder="you@email.com"
+                        inputMode="email" onChange={(e) => set("email", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                    </div>
+                    <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">Phone number <span className="req">*</span></label>
-                      <input id="sv-phone" className="lae-input" value={answers.phone} placeholder="+47 …"
-                        inputMode="tel" onChange={(e) => set("phone", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                      <div style={{ display: "flex" }}>
+                        <span style={{ display: "flex", alignItems: "center", padding: "0 14px", background: "var(--surface-2)", border: "1px solid var(--line)", borderRight: "none", borderRadius: "var(--r-sm) 0 0 var(--r-sm)", fontWeight: 700, fontSize: ".92rem", color: "var(--ink-soft)", whiteSpace: "nowrap", userSelect: "none" }}>🇳🇴 +47</span>
+                        <input id="sv-phone" className="lae-input" value={answers.phone} placeholder="915 86 115"
+                          inputMode="tel" onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
+                          style={{ fontSize: "1rem", padding: "13px 14px", borderRadius: "0 var(--r-sm) var(--r-sm) 0", borderLeft: "none" }} />
+                      </div>
+                      {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
                     </div>
                   </div>
                   <div className="lae-survey__nav" style={{ marginTop: 24 }}>
@@ -178,11 +194,11 @@ function QuickSurvey({ onQuote }) {
                       <Icon name="arrow" size={14} style={{ transform: "rotate(180deg)" }} /> Back
                     </button>
                     <span className="lae-survey__step">Step 4 of {TOTAL_STEPS}</span>
-                    <Button variant="primary" size="lg" iconRight="arrow" disabled={!answers.phone.trim()} onClick={submit}
+                    <Button variant="primary" size="lg" iconRight="arrow" onClick={submit}
                       data-analytics="survey_submit">Get menu recommendation</Button>
                   </div>
                   <p className="muted" style={{ fontSize: ".8rem", marginTop: 12 }}>
-                    By submitting you agree we may contact you about catering. No spam, ever.
+                    By submitting you agree we may contact you about your catering enquiry.
                   </p>
                 </>
               )}
@@ -307,8 +323,12 @@ function LeadForm({ seed, onSeedConsumed }) {
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-phone">Phone <span className="req">*</span></label>
-                    <input id="f-phone" className="lae-input" value={form.phone} onChange={set("phone")}
-                           inputMode="tel" placeholder="+47 …" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
+                    <div style={{ display: "flex" }}>
+                      <span style={{ display: "flex", alignItems: "center", padding: "0 12px", background: "var(--surface-2)", border: "1px solid var(--line)", borderRight: "none", borderRadius: "var(--r-sm) 0 0 var(--r-sm)", fontWeight: 700, fontSize: ".88rem", color: "var(--ink-soft)", whiteSpace: "nowrap", userSelect: "none", ...(errors.phone ? { borderColor: "var(--accent)" } : {}) }}>🇳🇴 +47</span>
+                      <input id="f-phone" className="lae-input" value={form.phone} onChange={set("phone")}
+                             inputMode="tel" placeholder="915 86 115"
+                             style={{ borderRadius: "0 var(--r-sm) var(--r-sm) 0", borderLeft: "none", ...(errors.phone ? { borderColor: "var(--accent)" } : {}) }} />
+                    </div>
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-email">Email</label>
