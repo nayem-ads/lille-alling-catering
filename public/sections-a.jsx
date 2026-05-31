@@ -17,12 +17,19 @@ const NAV_LINKS = [
 
 function Nav({ onQuote }) {
   const [stuck, setStuck] = useStateA(false);
+  const [menuOpen, setMenuOpen] = useStateA(false);
   useEffectA(() => {
     const onScroll = () => setStuck(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffectA(() => {
+    if (!menuOpen) return;
+    const close = (e) => { if (!e.target.closest(".lae-nav")) setMenuOpen(false); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [menuOpen]);
   return (
     <nav className={`lae-nav ${stuck ? "is-stuck" : ""}`} aria-label="Primary">
       <div className="lae-nav__inner">
@@ -33,15 +40,35 @@ function Nav({ onQuote }) {
         <div className="lae-navlinks">
           {NAV_LINKS.map((l) => <a key={l.href} href={l.href}>{l.label}</a>)}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <a className="lae-btn lae-btn--ghost lae-btn--sm" href="tel:+4791586115"
+        <div className="lae-nav__actions">
+          <a className="lae-btn lae-btn--ghost lae-btn--sm lae-nav__call" href="tel:+4791586115"
              data-analytics="click_call" onClick={() => track("click_call", { from: "nav" })}>
             <Icon name="phone" size={16} /><span>+47 915 86 115</span>
           </a>
           <Button variant="primary" size="sm" iconRight="arrow" data-analytics="start_quote"
-                  onClick={onQuote}>Request quote</Button>
+                  className="lae-nav__quote-btn" onClick={onQuote}>Request quote</Button>
+          <button className="lae-nav__burger" aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={menuOpen} onClick={() => setMenuOpen(o => !o)}>
+            <Icon name={menuOpen ? "x" : "menu"} size={22} />
+          </button>
         </div>
       </div>
+      {menuOpen && (
+        <div className="lae-nav__mobile-menu">
+          {NAV_LINKS.map((l) => (
+            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+          ))}
+          <div className="lae-nav__mobile-ctas">
+            <a className="lae-btn lae-btn--ghost" href="tel:+4791586115" onClick={() => setMenuOpen(false)}>
+              <Icon name="phone" size={16} /><span>+47 915 86 115</span>
+            </a>
+            <Button variant="primary" iconRight="arrow"
+                    onClick={() => { setMenuOpen(false); onQuote(); }}>
+              Request a quote
+            </Button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
@@ -80,8 +107,6 @@ function Hero({ onQuote, onMenus }) {
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 26 }}>
                 <Button variant="primary" size="lg" iconRight="arrow" data-analytics="start_quote"
                         onClick={onQuote}>Request catering quote</Button>
-                <Button variant="soft" size="lg" icon="menu" data-analytics="view_menu"
-                        onClick={onMenus}>View menus</Button>
               </div>
             </Reveal>
             <Reveal delay={300}>
@@ -108,25 +133,6 @@ function Hero({ onQuote, onMenus }) {
               </RevealTile>
             </div>
 
-            {/* floating event card */}
-            <Reveal delay={420} className="lae-event-card">
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <span className="lae-bestfor">Your event</span>
-                <span className="lae-chip lae-chip--solid" style={{ padding: "4px 9px", fontSize: ".72rem" }}>
-                  <Icon name="check" size={13} />Confirmed
-                </span>
-              </div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.18rem", marginBottom: 8 }}>Team lunch · Koldtbord</div>
-              <div className="stack-sm" style={{ fontSize: ".86rem", color: "var(--ink-soft)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Icon name="users" size={15} /> 24 guests</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Icon name="calendar" size={15} /> Fri · 12:00 delivery</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Icon name="pin" size={15} /> Drammen · within 40 km</div>
-              </div>
-              <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line)", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <span className="muted" style={{ fontSize: ".8rem" }}>Estimated</span>
-                <span className="lae-price">9 096 <small>NOK</small></span>
-              </div>
-            </Reveal>
           </Reveal>
         </div>
       </div>
