@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-noir="false">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- ===== SEO / metadata ===== -->
+  <title>Catering Drammen | Fresh Menus for Meetings &amp; Events | Lille Ælling</title>
+  <meta name="description" content="Premium catering in Drammen for meetings, birthdays, private events and celebrations. Freshly prepared menus, allergy-friendly options and delivery within 40 km." />
+  <meta name="theme-color" content="#F4EAD7" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Catering Drammen | Lille Ælling Café &amp; Bar" />
+  <meta property="og:description" content="Freshly prepared catering menus for meetings, celebrations and events — delivered within 40 km of Drammen." />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://lilleelling.no/collections/catering" />
+
+  <!-- ===== Fonts ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&family=Playfair+Display:ital,wght@0,400..600;1,400..500&family=Cormorant+Garamond:ital,wght@0,400..600;1,400..500&family=Manrope:wght@400..700&family=Inter:wght@400..700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ===== Analytics layer ===== -->
+  <script>window.dataLayer = window.dataLayer || [];</script>
+
+  <!-- ===== Real photo map — used by sections to replace image-slot ===== -->
+  <script>
+    window.PHOTO_MAP = {
+      "hero-1": "/images/snitter.png",
+      "hero-2": "/images/tapas.png",
+      "hero-3": "/images/guests.png",
+      "custom-1": "/images/lunchbox.png",
+      "venue-1": "/images/venue.png"
+    };
+    window.MENU_PHOTOS = {
+      "Snitterpakke Deluxe": "/images/snitter.png",
+      "Koldtbord": "/images/koldtbord.png",
+      "Tapas Selection": "/images/tapas.png",
+      "Møtemeny 2": "/images/wrap.png",
+      "Møtemeny 1": "/images/salad-bar.png",
+      "Møtemeny 3": "/images/varmretter.png",
+      "Varmretter & gryter": "/images/varmretter.png",
+      "Streetfood Catering": "/images/chips.png",
+      "Kaker & Desserter": "/images/carrot-cake.png",
+      "Lunsjsnitter": "/images/snitter.png",
+    };
+  </script>
+
+  <!-- ===== Hero video (Higgsfield — injected after generation) ===== -->
+  <style>
+    /* Hero video background */
+    .lae-hero-video-bg {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+    }
+    .lae-hero-video-bg video {
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0.22; filter: saturate(1.2);
+    }
+    .lae-hero-video-bg::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--bg) 85%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 40%, transparent) 60%,
+        transparent 100%);
+    }
+
+    /* Real image in hero collage tiles */
+    .lae-collage-img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      border-radius: var(--r-md);
+    }
+
+    /* Menu card real photos */
+    .lae-menu-card__real-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .6s cubic-bezier(.2,.7,.2,1);
+    }
+    .lae-menu-card:hover .lae-menu-card__real-img { transform: scale(1.06); }
+  </style>
+</head>
+<body>
+  <a href="#menus" style="position:absolute;left:-9999px;top:0;background:#271F18;color:#fff;padding:10px 16px;border-radius:8px;z-index:999"
+     onfocus="this.style.left='12px'" onblur="this.style.left='-9999px'">Skip to menus</a>
+
+  <div id="root"></div>
+
+  <!-- thumbnail used by standalone bundler -->
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#BC6B38"/>
+      <g transform="translate(30 30) scale(0.85)" fill="none" stroke="#F4EAD7" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M9 28c-3-1-5-4-5-7 0-4 3-7 8-7 3 0 6 2 7 4l6-1-2 4c0 5-4 8-9 8-2 0-4 0-5-1"/>
+        <circle cx="14" cy="18" r="1.2" fill="#F4EAD7" stroke="none"/>
+      </g>
+    </svg>
+  </template>
+
+  <!-- ===== React + Babel (pinned) ===== -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- ===== Plain-JS web component ===== -->
+  <script src="image-slot.js"></script>
+
+  <!-- ===== App (Babel) — order matters ===== -->
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="data.jsx"></script>
+  <script type="text/babel" src="components.jsx"></script>
+  <script type="text/babel" src="sections-a.jsx"></script>
+  <script type="text/babel" src="sections-b.jsx"></script>
+  <script type="text/babel" src="sections-c.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
