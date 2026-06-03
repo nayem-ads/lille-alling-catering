@@ -119,15 +119,19 @@ function Hero({ onQuote, onMenus }) {
           {/* collage — real photos */}
           <Reveal delay={120} className="lae-hero__collage-wrap" style={{ position: "relative" }}>
             <div className="lae-collage">
-              <RevealTile delay={140} className="c-tall">
+              <RevealTile delay={140}>
                 <img className="lae-collage-img" src="/images/snitter.png" alt="Snitter — open-faced sandwiches" />
                 <span className="slot-tag">Snitter</span>
               </RevealTile>
-              <RevealTile delay={220}>
+              <RevealTile delay={200}>
+                <img className="lae-collage-img" src="/images/carrot-cake.png" alt="Pastries & Cakes" />
+                <span className="slot-tag">Pastries</span>
+              </RevealTile>
+              <RevealTile delay={260}>
                 <img className="lae-collage-img" src="/images/tapas.png" alt="Tapas & charcuterie board" />
                 <span className="slot-tag">Tapas</span>
               </RevealTile>
-              <RevealTile delay={300}>
+              <RevealTile delay={320}>
                 <img className="lae-collage-img" src="/images/guests.png" alt="Guests enjoying catering" />
                 <span className="slot-tag">Your event</span>
               </RevealTile>

@@ -7,17 +7,17 @@
 
 // ---- Theme: palettes (CSS-variable bundles) --------------------------------
 const PALETTES = {
-  "Warm Café": {
-    "--bg": "#F4EAD7",
-    "--surface": "#FBF6EC",
-    "--surface-2": "#F1E5CF",
-    "--ink": "#271F18",
-    "--ink-soft": "#6A5C4E",
-    "--accent": "#BC6B38",
-    "--accent-2": "#79815F",
-    "--butter": "#E6BE48",
-    "--line": "rgba(39,31,24,0.12)",
-    "--shadow": "rgba(59,40,24,0.16)",
+  "Forest & Cream": {
+    "--bg": "#F6F5EF",
+    "--surface": "#FCFAF5",
+    "--surface-2": "#EBE9DF",
+    "--ink": "#192019",
+    "--ink-soft": "#3C473C",
+    "--accent": "#224229",
+    "--accent-2": "#556B55",
+    "--butter": "#C29F38",
+    "--line": "rgba(25, 32, 25, 0.09)",
+    "--shadow": "rgba(25, 32, 25, 0.12)",
     "dark": false,
   },
   "Sage Garden": {
@@ -49,10 +49,10 @@ const PALETTES = {
 };
 
 const ACCENTS = {
+  "Forest Green": "#224229",
+  "Sage": "#556B55",
   "Terracotta": "#BC6B38",
   "Caramel": "#B0763A",
-  "Sage": "#6C7850",
-  "Deep Green": "#4F6B4C",
 };
 
 const DISPLAY_FONTS = {

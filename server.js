@@ -122,12 +122,12 @@ app.post('/api/quote', async (req, res) => {
 
 // Survey quick capture
 app.post('/api/survey', async (req, res) => {
-  const { name, phone, occasion, guests, date } = req.body;
+  const { name, phone, email, occasion, guests, date } = req.body;
   try {
     await pool.query(
-      `INSERT INTO inquiries (name, phone, event_date, guests, event_type, source)
-       VALUES ($1,$2,$3,$4,$5,'survey')`,
-      [name, phone, date, guests, occasion]
+      `INSERT INTO inquiries (name, phone, email, event_date, guests, event_type, source)
+       VALUES ($1,$2,$3,$4,$5,$6,'survey')`,
+      [name, phone, email, date, guests, occasion]
     );
 
     const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no';
@@ -144,6 +144,7 @@ app.post('/api/survey', async (req, res) => {
             <table style="width:100%;border-collapse:collapse">
               ${row('Name', name)}
               ${row('Phone', phone ? `<a href="tel:${phone}">${phone}</a>` : '—')}
+              ${row('Email', email ? `<a href="mailto:${email}">${email}</a>` : '—')}
               ${row('Occasion', occasion)}
               ${row('Guests', guests)}
               ${row('Date', date)}

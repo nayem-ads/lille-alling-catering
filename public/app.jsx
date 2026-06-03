@@ -4,8 +4,8 @@
 const { useState: useStateApp, useEffect: useEffectApp } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "palette": "Warm Café",
-  "accent": "Terracotta",
+  "palette": "Forest & Cream",
+  "accent": "Forest Green",
   "displayFont": "Fraunces",
   "bodyFont": "Manrope",
   "texture": true
@@ -125,12 +125,12 @@ function App() {
       <TweaksPanel title="Tweaks">
         <TweakSection label="Palette" />
         <TweakRadio label="Mood" value={t.palette}
-          options={["Warm Café", "Sage Garden", "Espresso Noir"]}
+          options={["Forest & Cream", "Sage Garden", "Espresso Noir"]}
           onChange={(v) => setTweak("palette", v)} />
         <TweakColor label="Accent" value={ACCENTS[t.accent]}
           options={Object.values(ACCENTS)}
           onChange={(v) => {
-            const name = Object.keys(ACCENTS).find((k) => ACCENTS[k] === v) || "Terracotta";
+            const name = Object.keys(ACCENTS).find((k) => ACCENTS[k] === v) || "Forest Green";
             setTweak("accent", name);
           }} />
         <TweakSection label="Typography" />
