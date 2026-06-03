@@ -433,7 +433,7 @@ function Faq() {
 /* ---- Final CTA ----------------------------------------------------------- */
 function FinalCTA({ onQuote }) {
   return (
-    <section className="lae-section" style={{ paddingTop: 0 }}>
+    <section className="lae-section">
       <div className="lae-wrap">
         <Reveal>
           <div className="lae-finalcta">

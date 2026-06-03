@@ -72,7 +72,7 @@ function Customisation({ onQuote }) {
 
           <Reveal delay={120} style={{ position: "relative" }}>
             <div style={{ position: "relative", borderRadius: "var(--r-lg)", overflow: "hidden", aspectRatio: "4/5", border: "1px solid var(--line)" }}>
-              <img src="/images/lunchbox.png" alt="Tailored lunch box catering" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              <img src="/images/lunchbox.webp" alt="Tailored lunch box catering" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} loading="lazy" />
               <span className="slot-tag">Tailored plating</span>
             </div>
             <div className="lae-card floaty" style={{ position: "absolute", right: -16, top: 28, padding: "14px 16px", width: 210 }}>
@@ -210,7 +210,7 @@ function Venue({ onQuote }) {
                 </div>
               </div>
               <div className="lae-venue__media" style={{ position: "relative" }}>
-                <img src="/images/venue.png" alt="Lille Ælling café interior — event space" style={{ width: "100%", height: "100%", minHeight: "280px", objectFit: "cover", display: "block" }} />
+                <img src="/images/venue.webp" alt="Lille Ælling café interior — event space" style={{ width: "100%", height: "100%", minHeight: "280px", objectFit: "cover", display: "block" }} loading="lazy" />
                 <span className="slot-tag">Losjeplassen 2</span>
               </div>
             </div>

@@ -79,7 +79,7 @@ function Hero({ onQuote, onMenus }) {
     <header className="lae-hero" id="top">
       {/* Higgsfield cinematic video background */}
       <div className="lae-hero-video-bg">
-        <video autoPlay muted loop playsInline preload="none">
+        <video autoPlay muted loop playsInline preload="auto">
           <source src="/images/hero-video.mp4" type="video/mp4" />
         </video>
       </div>
@@ -120,19 +120,19 @@ function Hero({ onQuote, onMenus }) {
           <Reveal delay={120} className="lae-hero__collage-wrap" style={{ position: "relative" }}>
             <div className="lae-collage">
               <RevealTile delay={140}>
-                <img className="lae-collage-img" src="/images/snitter.png" alt="Snitter — open-faced sandwiches" />
+                <img className="lae-collage-img" src="/images/snitter.webp" alt="Snitter — open-faced sandwiches" />
                 <span className="slot-tag">Snitter</span>
               </RevealTile>
               <RevealTile delay={200}>
-                <img className="lae-collage-img" src="/images/carrot-cake.png" alt="Pastries & Cakes" />
+                <img className="lae-collage-img" src="/images/carrot-cake.webp" alt="Pastries & Cakes" />
                 <span className="slot-tag">Pastries</span>
               </RevealTile>
               <RevealTile delay={260}>
-                <img className="lae-collage-img" src="/images/tapas.png" alt="Tapas & charcuterie board" />
+                <img className="lae-collage-img" src="/images/tapas.webp" alt="Tapas & charcuterie board" />
                 <span className="slot-tag">Tapas</span>
               </RevealTile>
               <RevealTile delay={320}>
-                <img className="lae-collage-img" src="/images/guests.png" alt="Guests enjoying catering" />
+                <img className="lae-collage-img" src="/images/guests.webp" alt="Guests enjoying catering" />
                 <span className="slot-tag">Your event</span>
               </RevealTile>
             </div>
@@ -224,7 +224,7 @@ function MenuSection({ onQuote }) {
               <article className="lae-menu-card">
                 <div className="lae-menu-card__media">
                   {window.MENU_PHOTOS && window.MENU_PHOTOS[m.name]
-                    ? <img className="lae-menu-card__real-img" src={window.MENU_PHOTOS[m.name]} alt={m.name} />
+                    ? <img className="lae-menu-card__real-img" src={window.MENU_PHOTOS[m.name]} alt={m.name} loading="lazy" />
                     : <div className={`lae-illus lae-illus--${m.tone}`}><FoodGlyph tone={m.tone} /></div>
                   }
                   <span className="slot-tag">{m.no}</span>
