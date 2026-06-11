@@ -481,6 +481,11 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
   /* Hero adjustments */
   .lae-hero { padding-top: clamp(90px, 12vh, 130px); }
   .lae-hero__collage-wrap { display: none; }
+  .lae-hero h1,
+  .lae-hero .lae-lead {
+    color: #000000 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+  }
 }
 
 /* utility */

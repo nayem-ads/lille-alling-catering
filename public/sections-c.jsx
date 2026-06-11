@@ -494,7 +494,7 @@ function Footer({ lang }) {
           <div>
             <div className="lae-brand" style={{ color: "var(--surface)", marginBottom: 14 }}>
               <DuckMark size={36} />
-              <span style={{ color: "var(--surface)" }}>Lille Ælling<small style={{ color: "var(--accent)" }}>Catering · Drammen</small></span>
+              <span className="lae-brand-sub" style={{ color: "var(--accent)", borderLeftColor: "rgba(255,255,255,0.15)" }}>Catering · Drammen</span>
             </div>
             <p style={{ color: "color-mix(in srgb, var(--surface) 70%, transparent)", maxWidth: "34ch", fontSize: ".92rem" }}>
               {t("footer_tagline", lang)}
