@@ -37,16 +37,16 @@ function Icon({ name, size = 22, stroke = 1.6, className = "", style }) {
   }
 }
 
-// ---- Duck brand mark (original line-art) -----------------------------------
-function DuckMark({ size = 34, className = "", style }) {
+// ---- Duck brand mark (official LILLE ÆLLING logo) --------------------------
+function DuckMark({ size, className = "", style }) {
+  const heightStyle = size ? { height: size, width: "auto" } : {};
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} style={style} aria-hidden="true">
-      <circle cx="24" cy="24" r="23" fill="var(--accent)" opacity="0.1"/>
-      <path d="M16.5 30c-2.8-1-4.6-3.6-4.6-6.7 0-4.2 3.4-7.4 7.7-7.4 3.1 0 5.8 1.8 7 4.4l5.9-1c.7-.1 1.2.6.9 1.2l-2 3.6c.2.8.3 1.5.3 2.3 0 5-3.9 8.6-9.3 8.6-2.2 0-4-.5-5.6-1.4"
-        stroke="var(--accent)" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round"/>
-      <circle cx="21.6" cy="20.4" r="1.15" fill="var(--ink)"/>
-      <path d="M14 33.5c2.6 1.2 6.2 1.6 9.6 1" stroke="var(--butter)" strokeWidth="1.8" strokeLinecap="round"/>
-    </svg>
+    <img 
+      src="/images/logo.png" 
+      alt="Lille Ælling" 
+      className={`lae-brand-logo ${className}`} 
+      style={{ ...heightStyle, ...style }} 
+    />
   );
 }
 

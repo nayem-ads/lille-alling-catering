@@ -4,15 +4,15 @@
 const { useState: useStateApp, useEffect: useEffectApp } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "palette": "Forest & Cream",
-  "accent": "Forest Green",
+  "palette": "Coffee & Cream",
+  "accent": "Caramel",
   "displayFont": "Fraunces",
   "bodyFont": "Manrope",
   "texture": true
 }/*EDITMODE-END*/;
 
 /* ---- Desktop floating quote card ----------------------------------------- */
-function FloatCard({ onOpen, onSubmit }) {
+function FloatCard({ lang, onOpen, onSubmit }) {
   const [hidden, setHidden] = useStateApp(true);
   const [dismissed, setDismissed] = useStateApp(false);
   const [v, setV] = useStateApp({ type: "Office meeting", guests: "", date: "" });
@@ -32,7 +32,9 @@ function FloatCard({ onOpen, onSubmit }) {
   return (
     <aside className={`lae-floatcard ${hidden ? "is-hidden" : ""}`} aria-hidden={hidden}>
       <div className="lae-floatcard__head">
-        <strong style={{ fontFamily: "var(--font-display)", fontSize: "1.08rem" }}>Get a menu recommendation</strong>
+        <strong style={{ fontFamily: "var(--font-display)", fontSize: "1.02rem" }}>
+          {t("survey_submit", lang)}
+        </strong>
         <button className="lae-floatcard__close" aria-label="Dismiss" onClick={() => setDismissed(true)}><Icon name="x" size={16} /></button>
       </div>
       <div className="mini">
@@ -40,20 +42,22 @@ function FloatCard({ onOpen, onSubmit }) {
           {["Office meeting", "Birthday / party", "Wedding / confirmation", "Casual gathering", "Venue + catering"].map((t) => <option key={t}>{t}</option>)}
         </select>
         <div style={{ display: "flex", gap: 9 }}>
-          <input className="lae-input" type="number" min="1" placeholder="Guests" value={v.guests}
+          <input className="lae-input" type="number" min="1" placeholder={t("field_guests", lang)} value={v.guests}
                  onChange={(e) => setV({ ...v, guests: e.target.value })} aria-label="Guest count" />
           <input className="lae-input" type="date" value={v.date}
                  onChange={(e) => setV({ ...v, date: e.target.value })} aria-label="Event date" />
         </div>
       </div>
       <Button variant="primary" iconRight="arrow" className="lae-btn--md" style={{ width: "100%" }}
-              data-analytics="start_quote" onClick={() => onOpen(v.type)}>Get menu recommendation</Button>
+              data-analytics="start_quote" onClick={() => onOpen(v.type)}>
+        {t("survey_submit", lang)}
+      </Button>
     </aside>
   );
 }
 
 /* ---- Sticky mobile CTA bar ----------------------------------------------- */
-function MobileBar({ onQuote, onMenus }) {
+function MobileBar({ lang, onQuote, onMenus }) {
   return (
     <div className="lae-mobilebar" role="region" aria-label="Quick actions">
       <a className="ic" href="tel:+4791586115" aria-label="Call Lille Ælling"
@@ -61,7 +65,7 @@ function MobileBar({ onQuote, onMenus }) {
         <Icon name="phone" size={20} />
       </a>
       <Button variant="primary" className="lae-btn--md" style={{ width: "100%" }} data-analytics="start_quote" onClick={() => onQuote()}>
-        Request quote
+        {t("nav_request_quote", lang)}
       </Button>
       <button className="ic" aria-label="View menus" data-analytics="view_menu" onClick={onMenus}>
         <Icon name="menu" size={20} />
@@ -72,21 +76,22 @@ function MobileBar({ onQuote, onMenus }) {
 
 /* ---- Root ---------------------------------------------------------------- */
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [tweak, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [seed, setSeed] = useStateApp(null);
+  const [lang, setLang] = useStateApp("no");
 
   // apply theme tokens to :root
   useEffectApp(() => {
     const root = document.documentElement;
-    const pal = PALETTES[t.palette] || PALETTES["Warm Café"];
+    const pal = PALETTES[tweak.palette] || PALETTES["Coffee & Cream"];
     Object.entries(pal).forEach(([k, val]) => { if (k.startsWith("--")) root.style.setProperty(k, val); });
     root.setAttribute("data-noir", String(!!pal.dark));
     // accent overrides palette accent for independent mixing
-    if (ACCENTS[t.accent]) root.style.setProperty("--accent", ACCENTS[t.accent]);
-    root.style.setProperty("--font-display", DISPLAY_FONTS[t.displayFont] || DISPLAY_FONTS["Fraunces"]);
-    root.style.setProperty("--font-body", BODY_FONTS[t.bodyFont] || BODY_FONTS["Manrope"]);
-    root.style.setProperty("--texture", t.texture ? "1" : "0");
-  }, [t.palette, t.accent, t.displayFont, t.bodyFont, t.texture]);
+    if (ACCENTS[tweak.accent]) root.style.setProperty("--accent", ACCENTS[tweak.accent]);
+    root.style.setProperty("--font-display", DISPLAY_FONTS[tweak.displayFont] || DISPLAY_FONTS["Fraunces"]);
+    root.style.setProperty("--font-body", BODY_FONTS[tweak.bodyFont] || BODY_FONTS["Manrope"]);
+    root.style.setProperty("--texture", tweak.texture ? "1" : "0");
+  }, [tweak.palette, tweak.accent, tweak.displayFont, tweak.bodyFont, tweak.texture]);
 
   const goQuote = (menuName) => setSeed(menuName || `quote-${Date.now()}`);
   const goMenus = () => {
@@ -102,46 +107,46 @@ function App() {
 
   return (
     <React.Fragment>
-      <Nav onQuote={() => goQuote()} />
+      <Nav lang={lang} setLang={setLang} onQuote={() => goQuote()} />
       <main>
-        <Hero onQuote={() => goQuote()} onMenus={goMenus} />
-        <QuickSurvey onQuote={goQuote} />
-        <IntentSelector onTarget={goTarget} />
-        <MenuSection onQuote={goQuote} />
-        <HowItWorks />
-        <Customisation onQuote={goQuote} />
-        <LocalTrust />
-        <Reviews />
-        <Venue onQuote={goQuote} />
-        <LeadForm seed={seed} onSeedConsumed={() => setSeed(null)} />
-        <Faq />
-        <FinalCTA onQuote={() => goQuote()} />
+        <Hero lang={lang} onQuote={() => goQuote()} onMenus={goMenus} />
+        <QuickSurvey lang={lang} onQuote={goQuote} />
+        <IntentSelector lang={lang} onTarget={goTarget} />
+        <MenuSection lang={lang} onQuote={goQuote} />
+        <HowItWorks lang={lang} />
+        <Customisation lang={lang} onQuote={goQuote} />
+        <LocalTrust lang={lang} />
+        <Reviews lang={lang} />
+        <Venue lang={lang} onQuote={goQuote} />
+        <LeadForm lang={lang} seed={seed} onSeedConsumed={() => setSeed(null)} />
+        <Faq lang={lang} />
+        <FinalCTA lang={lang} onQuote={() => goQuote()} />
       </main>
-      <Footer />
+      <Footer lang={lang} />
 
-      <FloatCard onOpen={(type) => goQuote(type)} />
-      <MobileBar onQuote={() => goQuote()} onMenus={goMenus} />
+      <FloatCard lang={lang} onOpen={(type) => goQuote(type)} />
+      <MobileBar lang={lang} onQuote={() => goQuote()} onMenus={goMenus} />
 
       <TweaksPanel title="Tweaks">
         <TweakSection label="Palette" />
-        <TweakRadio label="Mood" value={t.palette}
-          options={["Forest & Cream", "Sage Garden", "Espresso Noir"]}
+        <TweakRadio label="Mood" value={tweak.palette}
+          options={["Coffee & Cream", "Espresso Noir"]}
           onChange={(v) => setTweak("palette", v)} />
-        <TweakColor label="Accent" value={ACCENTS[t.accent]}
+        <TweakColor label="Accent" value={ACCENTS[tweak.accent]}
           options={Object.values(ACCENTS)}
           onChange={(v) => {
-            const name = Object.keys(ACCENTS).find((k) => ACCENTS[k] === v) || "Forest Green";
+            const name = Object.keys(ACCENTS).find((k) => ACCENTS[k] === v) || "Caramel";
             setTweak("accent", name);
           }} />
         <TweakSection label="Typography" />
-        <TweakRadio label="Display" value={t.displayFont}
+        <TweakRadio label="Display" value={tweak.displayFont}
           options={["Fraunces", "Playfair", "Cormorant"]}
           onChange={(v) => setTweak("displayFont", v)} />
-        <TweakRadio label="Body" value={t.bodyFont}
+        <TweakRadio label="Body" value={tweak.bodyFont}
           options={["Manrope", "Inter"]}
           onChange={(v) => setTweak("bodyFont", v)} />
         <TweakSection label="Finish" />
-        <TweakToggle label="Paper texture" value={t.texture}
+        <TweakToggle label="Paper texture" value={tweak.texture}
           onChange={(v) => setTweak("texture", v)} />
       </TweaksPanel>
     </React.Fragment>

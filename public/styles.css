@@ -6,16 +6,16 @@
    ========================================================================= */
 
 :root {
-  --bg: #F6F5EF;
+  --bg: #F6F0EE;
   --surface: #FCFAF5;
   --surface-2: #EBE9DF;
-  --ink: #0B100B;
-  --ink-soft: #242E24;
-  --accent: #224229;
-  --accent-2: #556B55;
+  --ink: #373029;
+  --ink-soft: #5B5046;
+  --accent: #8C6239;
+  --accent-2: #B0763A;
   --butter: #C29F38;
-  --line: rgba(25, 32, 25, 0.09);
-  --shadow: rgba(25, 32, 25, 0.12);
+  --line: rgba(55, 48, 41, 0.09);
+  --shadow: rgba(55, 48, 41, 0.12);
 
   --font-display: 'Fraunces', Georgia, serif;
   --font-body: 'Manrope', system-ui, sans-serif;
@@ -489,3 +489,64 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 .center { text-align: center; }
 .stack-sm > * + * { margin-top: 10px; }
 .divider-dot { color: var(--line); }
+
+/* Brand Logo and Language Switcher additions */
+.lae-brand-logo {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+[data-noir="true"] .lae-brand-logo,
+.lae-footer .lae-brand-logo {
+  filter: brightness(0) invert(1);
+}
+.lae-brand-sub {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  border-left: 1px solid var(--line);
+  padding-left: 11px;
+  white-space: nowrap;
+  line-height: 1;
+}
+@media (max-width: 500px) {
+  .lae-brand-sub {
+    display: none;
+  }
+}
+
+.lae-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 3px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  user-select: none;
+}
+.lae-lang-btn {
+  padding: 3px 8px;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+  line-height: 1;
+}
+.lae-lang-btn:hover {
+  color: var(--ink);
+}
+.lae-lang-btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
