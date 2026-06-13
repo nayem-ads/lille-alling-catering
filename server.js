@@ -79,7 +79,7 @@ app.post('/api/quote', async (req, res) => {
     const menusList = Array.isArray(menus) ? menus.join(', ') : menus;
 
     await transporter.sendMail({
-      from: `"Lille Ælling Website" <${process.env.SMTP_USER}>`,
+      from: `"Lille Ælling Website" <${process.env.SENDER_EMAIL || process.env.SMTP_USER}>`,
       to: recipientEmail,
       subject: `🦆 New catering inquiry — ${eventType || 'General'} · ${name || 'Anonymous'}`,
       html: `
@@ -132,7 +132,7 @@ app.post('/api/survey', async (req, res) => {
 
     const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no';
     await transporter.sendMail({
-      from: `"Lille Ælling Website" <${process.env.SMTP_USER}>`,
+      from: `"Lille Ælling Website" <${process.env.SENDER_EMAIL || process.env.SMTP_USER}>`,
       to: recipientEmail,
       subject: `🦆 Quick lead — ${occasion || 'Event'} · ${name || phone}`,
       html: `
