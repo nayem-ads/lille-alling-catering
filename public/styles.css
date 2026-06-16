@@ -555,3 +555,76 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
   background: var(--accent);
   color: #fff;
 }
+
+/* ---- Overrides for CRO, Mobile spacing & Form Pop-out ---- */
+
+.lae-form {
+  background: #EDE3D0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08) !important;
+}
+
+.lae-form-submit-btn {
+  height: 56px !important;
+  font-weight: 700 !important;
+  background-color: #8B6914 !important;
+  color: #ffffff !important;
+  border: none !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.lae-form-submit-btn:hover {
+  background-color: #725610 !important;
+}
+
+.lae-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: lae-spin 0.8s linear infinite;
+}
+
+@keyframes lae-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .lae-hero {
+    padding-top: 60px !important;
+    padding-bottom: 20px !important;
+  }
+  .lae-hero h1 {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 12px !important;
+  }
+  .lae-hero .lae-lead {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 16px !important;
+  }
+  .lae-hero-trust-chips {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 8px !important;
+    padding: 8px 4px !important;
+    width: 100% !important;
+  }
+  .lae-hero-trust-chips::-webkit-scrollbar {
+    display: none !important;
+  }
+  .lae-hero-trust-chips .lae-chip {
+    flex: 0 0 auto !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+

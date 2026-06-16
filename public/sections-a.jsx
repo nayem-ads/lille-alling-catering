@@ -35,7 +35,7 @@ function Nav({ lang, setLang, onQuote }) {
       <div className="lae-nav__inner">
         <a className="lae-brand" href="#top" aria-label="Lille Ælling home">
           <DuckMark size={26} />
-          <span className="lae-brand-sub">Catering · Drammen</span>
+          <span className="lae-brand-sub">Catering i Drammen</span>
         </a>
         <div className="lae-navlinks">
           {getNavLinks(lang).map((l) => <a key={l.href} href={l.href}>{l.label}</a>)}
@@ -117,7 +117,7 @@ function Hero({ lang, onQuote, onMenus }) {
               </div>
             </Reveal>
             <Reveal delay={300}>
-              <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
+              <div className="lae-hero-trust-chips" style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
                 {TRUST_CHIPS.map((c) => <Chip key={c.label.en} icon={c.icon}>{c.label[lang]}</Chip>)}
               </div>
             </Reveal>
@@ -163,25 +163,21 @@ function RevealTile({ children, delay, className = "" }) {
 /* ---- Intent selector ----------------------------------------------------- */
 function IntentSelector({ lang, onTarget }) {
   return (
-    <section className="lae-section lae-section--tight" id="plan">
+    <section className="lae-section lae-section--tight hide-on-mobile" id="plan">
       <div className="lae-wrap">
-        <div style={{ maxWidth: 640, marginBottom: 40 }}>
+        <div style={{ maxWidth: 640, marginBottom: 32 }}>
           <Reveal><Eyebrow>{t("intent_eyebrow", lang)}</Eyebrow></Reveal>
           <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16 }}>{t("intent_title", lang)}</h2></Reveal>
-          <Reveal delay={140}><p className="lae-lead" style={{ marginTop: 14 }}>
-            {t("intent_description", lang)}
-          </p></Reveal>
         </div>
         <div className="lae-intent-grid">
           {INTENTS.map((it, i) => (
             <Reveal key={it.title.en} delay={i * 70}>
               <div className="lae-intent" role="button" tabIndex={0}
                    onClick={() => onTarget(it.target)}
-                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTarget(it.target); } }}>
-                <div className="lae-intent__ico"><Icon name={it.icon} size={24} /></div>
-                <h3>{it.title[lang]}</h3>
-                <p className="muted" style={{ fontSize: ".92rem", flex: 1 }}>{it.copy[lang]}</p>
-                <span className="lae-intent__cta">{it.cta[lang]} <Icon name="arrow" size={16} /></span>
+                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTarget(it.target); } }}
+                   style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "24px 16px", minHeight: "120px" }}>
+                <div className="lae-intent__ico" style={{ marginBottom: 12 }}><Icon name={it.icon} size={28} /></div>
+                <h3 style={{ fontSize: "1.12rem", margin: 0 }}>{it.title[lang]}</h3>
               </div>
             </Reveal>
           ))}
@@ -240,9 +236,10 @@ function MenuSection({ lang, onQuote }) {
                   <div className="lae-bestfor">{t("menu_best_for", lang)}{m.bestFor[lang]}</div>
                   <h3 style={{ fontSize: "1.34rem" }}>{m.name[lang]}</h3>
                   <p className="muted" style={{ fontSize: ".92rem" }}>{m.desc[lang]}</p>
-                  <div className="lae-priceblock">
-                    <span className="lae-price">{t("menu_from", lang)} {m.price}</span>
-                    <span className="lae-unit">{t("menu_nok", lang)} · {m.unit[lang]}</span>
+                  <div className="lae-priceblock" style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                    <span className="lae-price" style={{ fontSize: "1.25rem", fontWeight: 700 }}>
+                      {lang === 'en' ? 'from' : 'fra'} {m.price} {lang === 'en' ? 'NOK/pers' : 'kr/pers'}
+                    </span>
                   </div>
                   <a className="lae-menu-card__cta" href="#quote" data-analytics="view_menu"
                      onClick={(e) => { e.preventDefault(); onQuote(m.name.en); }}>

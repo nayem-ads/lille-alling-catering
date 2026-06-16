@@ -34,57 +34,20 @@ function HowItWorks({ lang }) {
 /* ---- Customisation / allergy reassurance --------------------------------- */
 function Customisation({ lang, onQuote }) {
   return (
-    <section className="lae-section" id="custom">
-      <div className="lae-wrap">
-        <div className="lae-split">
-          <div>
-            <Reveal><Eyebrow>{t("cust_eyebrow", lang)}</Eyebrow></Reveal>
-            <Reveal delay={80}>
-              <h2 className="display-lg" style={{ marginTop: 16 }}>
-                {t("cust_title", lang)}<span className="serif-italic accent">{t("cust_title_italic", lang)}</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={150}>
-              <p className="lae-lead" style={{ marginTop: 16 }}>
-                {t("cust_description", lang)}
-              </p>
-            </Reveal>
-            <Reveal delay={220}>
-              <ul className="lae-checklist">
-                {DIETARY.map((d) => (
-                  <li key={d.en}><span className="tick"><Icon name="check" size={16} /></span>{d[lang]}</li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={300}>
-              <div style={{ marginTop: 30, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <Button variant="primary" iconRight="arrow" data-analytics="start_quote" onClick={() => onQuote()}>
-                  {t("cust_cta", lang)}
-                </Button>
-                <Button variant="ghost" icon="phone" as="a" href="tel:+4791586115"
-                        data-analytics="click_call" onClick={() => track("click_call", { from: "custom" })}>
-                  {t("cust_talk", lang)}
-                </Button>
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal delay={120} style={{ position: "relative" }}>
-            <div style={{ position: "relative", borderRadius: "var(--r-lg)", overflow: "hidden", aspectRatio: "4/5", border: "1px solid var(--line)" }}>
-              <img src="/images/lunchbox.webp" alt="Tailored lunch box catering" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} loading="lazy" />
-              <span className="slot-tag">{t("cust_tag", lang)}</span>
-            </div>
-            <div className="lae-card floaty" style={{ position: "absolute", right: -16, top: 28, padding: "14px 16px", width: 210 }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
-                <span className="tick" style={{ width: 26, height: 26, flex: "none", background: "color-mix(in srgb, var(--butter) 30%, var(--surface))", color: "#7a5a16", borderRadius: "50%", display: "grid", placeItems: "center" }}>
-                  <Icon name="leaf" size={15} />
-                </span>
-                <strong style={{ fontSize: ".9rem", whiteSpace: "nowrap" }}>{t("cust_allergy_title", lang)}</strong>
-              </div>
-              <p className="muted" style={{ fontSize: ".82rem" }}>{t("cust_allergy_bubble", lang)}</p>
-            </div>
-          </Reveal>
-        </div>
+    <section className="lae-section lae-section--tight" id="custom" style={{ background: "var(--surface)", borderBottom: "1px solid var(--line)" }}>
+      <div className="lae-wrap" style={{ textAlign: "center", maxWidth: 800 }}>
+        <Reveal>
+          <h2 className="display-md" style={{ marginBottom: 10 }}>
+            {lang === 'en' ? 'Tailored to all guests' : 'Tilpasset alle gjester'}
+          </h2>
+        </Reveal>
+        <Reveal delay={80}>
+          <p className="lae-lead" style={{ fontSize: "1.05rem", margin: 0 }}>
+            {lang === 'en' 
+              ? 'Gluten-free · Lactose-free · Vegetarian · Vegan · Nut-free — just let us know in your request.' 
+              : 'Glutenfritt · Laktosefritt · Vegetar · Vegan · Nøttefritt — bare gi beskjed i bestillingen.'}
+          </p>
+        </Reveal>
       </div>
     </section>
   );
@@ -112,23 +75,7 @@ function LocalTrust({ lang }) {
           </Reveal>
           <div>
             <Reveal><Eyebrow>{t("local_eyebrow", lang)}</Eyebrow></Reveal>
-            <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16, marginBottom: 8 }}>{t("local_title", lang)}</h2></Reveal>
-            <Reveal delay={140}><p className="lae-lead" style={{ marginBottom: 10 }}>
-              {t("local_description", lang)}
-            </p></Reveal>
-            <Reveal delay={200}>
-              <div style={{ marginTop: 14 }}>
-                {LOCAL_FACTS.map((f) => (
-                  <div key={f.title.en} className="lae-fact">
-                    <span className="lae-fact__ico"><Icon name={f.icon} size={20} /></span>
-                    <div>
-                      <strong style={{ display: "block", fontSize: "1rem" }}>{f.title[lang]}</strong>
-                      <span className="muted" style={{ fontSize: ".9rem" }}>{f.copy[lang]}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
+            <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16 }}>{t("local_title", lang)}</h2></Reveal>
           </div>
         </div>
       </div>
@@ -172,6 +119,9 @@ function Reviews({ lang }) {
             </Reveal>
           ))}
         </div>
+        <div style={{ textAlign: "center", marginTop: 28, fontSize: "1.1rem", fontWeight: 700, color: "var(--accent)" }}>
+          ★★★★★ {lang === 'en' ? 'Based on 47+ orders' : 'Basert på 47+ bestillinger'}
+        </div>
       </div>
     </section>
   );
@@ -188,24 +138,6 @@ function Venue({ lang, onQuote }) {
               <div className="lae-venue__body">
                 <Eyebrow>{t("venue_eyebrow", lang)}</Eyebrow>
                 <h2 className="display-lg" style={{ marginTop: 4 }}>{t("venue_title", lang)}</h2>
-                <p className="lae-lead" style={{ color: "color-mix(in srgb, var(--surface) 80%, transparent)", maxWidth: "46ch" }}>
-                  {t("venue_description", lang)}
-                </p>
-                <div className="lae-venue__stats">
-                  <div className="lae-venue__stat"><b>{t("venue_stat_seated_n", lang)}</b><span>{t("venue_stat_seated_txt", lang)}</span></div>
-                  <div className="lae-venue__stat"><b>{t("venue_stat_standing_n", lang)}</b><span>{t("venue_stat_standing_txt", lang)}</span></div>
-                  <div className="lae-venue__stat"><b>{t("venue_stat_price_n", lang)}</b><span>{t("venue_stat_price_txt", lang)}</span></div>
-                </div>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
-                  <Button variant="butter" iconRight="arrow" data-analytics="venue_interest" onClick={() => onQuote("Venue + catering")}>
-                    {t("venue_cta", lang)}
-                  </Button>
-                  <Button variant="ghost" icon="phone" as="a" href="tel:+4791586115"
-                          style={{ color: "var(--surface)", borderColor: "color-mix(in srgb, var(--surface) 30%, transparent)" }}
-                          data-analytics="click_call" onClick={() => track("click_call", { from: "venue" })}>
-                    {t("venue_call", lang)}
-                  </Button>
-                </div>
               </div>
               <div className="lae-venue__media" style={{ position: "relative" }}>
                 <img src="/images/venue.webp" alt="Lille Ælling café interior — event space" style={{ width: "100%", height: "100%", minHeight: "280px", objectFit: "cover", display: "block" }} loading="lazy" />

@@ -33,7 +33,7 @@ function FloatCard({ lang, onOpen, onSubmit }) {
     <aside className={`lae-floatcard ${hidden ? "is-hidden" : ""}`} aria-hidden={hidden}>
       <div className="lae-floatcard__head">
         <strong style={{ fontFamily: "var(--font-display)", fontSize: "1.02rem" }}>
-          {t("survey_submit", lang)}
+          {t("float_title", lang)}
         </strong>
         <button className="lae-floatcard__close" aria-label="Dismiss" onClick={() => setDismissed(true)}><Icon name="x" size={16} /></button>
       </div>
@@ -48,9 +48,9 @@ function FloatCard({ lang, onOpen, onSubmit }) {
                  onChange={(e) => setV({ ...v, date: e.target.value })} aria-label="Event date" />
         </div>
       </div>
-      <Button variant="primary" iconRight="arrow" className="lae-btn--md" style={{ width: "100%" }}
+      <Button variant="primary" className="lae-btn--md" style={{ width: "100%" }}
               data-analytics="start_quote" onClick={() => onOpen(v.type)}>
-        {t("survey_submit", lang)}
+        {lang === 'en' ? "Send →" : "Send →"}
       </Button>
     </aside>
   );
@@ -79,6 +79,16 @@ function App() {
   const [tweak, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [seed, setSeed] = useStateApp(null);
   const [lang, setLang] = useStateApp("no");
+  const [surveyData, setSurveyData] = useStateApp(null);
+
+  const handleSurveyComplete = (answers) => {
+    setSurveyData(answers);
+    const el = document.getElementById("quote");
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
 
   // apply theme tokens to :root
   useEffectApp(() => {
@@ -110,7 +120,7 @@ function App() {
       <Nav lang={lang} setLang={setLang} onQuote={() => goQuote()} />
       <main>
         <Hero lang={lang} onQuote={() => goQuote()} onMenus={goMenus} />
-        <QuickSurvey lang={lang} onQuote={goQuote} />
+        <QuickSurvey lang={lang} onQuote={goQuote} onComplete={handleSurveyComplete} />
         <IntentSelector lang={lang} onTarget={goTarget} />
         <MenuSection lang={lang} onQuote={goQuote} />
         <HowItWorks lang={lang} />
@@ -118,7 +128,7 @@ function App() {
         <LocalTrust lang={lang} />
         <Reviews lang={lang} />
         <Venue lang={lang} onQuote={goQuote} />
-        <LeadForm lang={lang} seed={seed} onSeedConsumed={() => setSeed(null)} />
+        <LeadForm lang={lang} seed={seed} onSeedConsumed={() => setSeed(null)} surveyData={surveyData} />
         <Faq lang={lang} />
         <FinalCTA lang={lang} onQuote={() => goQuote()} />
       </main>

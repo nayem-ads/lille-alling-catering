@@ -5,20 +5,19 @@ const { useState: useStateC, useEffect: useEffectC, useRef: useRefC } = React;
 
 /* ---- Quick survey funnel (after Hero) ------------------------------------ */
 const getSurveyOccasions = (lang) => [
-  { icon: "💼", label: lang === 'en' ? "Office meeting" : "Møtemat til kontoret", sub: lang === 'en' ? "Lunch, workshop" : "Lunsj, heldag", value: "Office meeting" },
-  { icon: "🎂", label: lang === 'en' ? "Birthday / Party" : "Bursdag & privat selskap", sub: lang === 'en' ? "Celebrations" : "Bursdag, fest", value: "Birthday / party" },
-  { icon: "💍", label: lang === 'en' ? "Wedding / Confirmation" : "Bryllup & konfirmasjon", sub: lang === 'en' ? "Milestone events" : "Store merkedager", value: "Wedding / confirmation" },
-  { icon: "🍷", label: lang === 'en' ? "Casual gathering" : "Uformelt lag", sub: lang === 'en' ? "Tapas, streetfood" : "Tapas, streetfood", value: "Casual gathering" },
+  { icon: "🏢", label: lang === 'en' ? "Office meeting" : "Møtemat", sub: lang === 'en' ? "Lunch, workshop" : "Lunsj, heldag", value: "Office meeting" },
+  { icon: "🎂", label: lang === 'en' ? "Birthday & fest" : "Bursdag & fest", sub: lang === 'en' ? "Celebrations" : "Bursdag, fest", value: "Birthday / party" },
+  { icon: "💍", label: lang === 'en' ? "Wedding & confirmation" : "Bryllup & konfirmasjon", sub: lang === 'en' ? "Milestone events" : "Store merkedager", value: "Wedding / confirmation" },
+  { icon: "🎉", label: lang === 'en' ? "Casual gathering" : "Uformelt selskap", sub: lang === 'en' ? "Tapas, streetfood" : "Tapas, streetfood", value: "Casual gathering" },
 ];
 
 const GUEST_OPTIONS = ["1–10", "10–25", "25–50", "50–100", "100+"];
 
 const TOTAL_STEPS = 4;
 
-function QuickSurvey({ lang, onQuote }) {
+function QuickSurvey({ lang, onQuote, onComplete }) {
   const [step, setStepS] = useStateC(1);
-  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "", email: "" });
-  const [sent, setSentS] = useStateC(false);
+  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "+47 ", email: "" });
   const [phoneErr, setPhoneErr] = useStateC("");
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }));
@@ -27,7 +26,7 @@ function QuickSurvey({ lang, onQuote }) {
   const next = () => setStepS((s) => Math.min(s + 1, TOTAL_STEPS));
   const back = () => setStepS((s) => Math.max(s - 1, 1));
 
-  const submit = async () => {
+  const submit = () => {
     const digits = answers.phone.replace(/\D/g, "");
     if (!digits || digits.length < 8) {
       setPhoneErr(lang === 'en' ? "Please enter a valid phone number (min 8 digits)." : "Vennligst oppgi et gyldig telefonnummer (minst 8 siffer).");
@@ -35,55 +34,10 @@ function QuickSurvey({ lang, onQuote }) {
     }
     setPhoneErr("");
     track("survey_submit", { occasion: answers.occasion, guests: answers.guests });
-    try {
-      await fetch("/api/survey", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...answers, phone: "+47 " + answers.phone }),
-      });
-    } catch (_) {}
-    window.location.href = "/thank-you";
-    // pre-fill the main quote form with survey data
-    setTimeout(() => {
-      const nameEl = document.getElementById("f-name");
-      const phoneEl = document.getElementById("f-phone");
-      const dateEl = document.getElementById("f-date");
-      const typeEl = document.getElementById("f-type");
-      const guestsEl = document.getElementById("f-guests");
-      if (nameEl) nameEl.value = answers.name;
-      if (phoneEl) phoneEl.value = answers.phone;
-      if (dateEl && answers.date) dateEl.value = answers.date;
-      if (typeEl) typeEl.value = answers.occasion;
-      const gNum = answers.guests.replace(/[^\d]/g, "").split("–")[0] || "";
-      if (guestsEl) guestsEl.value = gNum;
-    }, 200);
+    if (onComplete) {
+      onComplete(answers);
+    }
   };
-
-  if (sent) {
-    return (
-      <section className="lae-section lae-section--tight lae-survey-section" id="survey">
-        <div className="lae-wrap" style={{ maxWidth: 860 }}>
-          <div className="lae-survey">
-            <div className="lae-survey__progress"><div className="lae-survey__progress-fill" style={{ width: "100%" }} /></div>
-            <div className="lae-survey__body" style={{ textAlign: "center", paddingBlock: "48px" }}>
-              <div style={{ width: 68, height: 68, borderRadius: "50%", background: "color-mix(in srgb,var(--accent) 15%,var(--surface))",
-                color: "var(--accent)", display: "grid", placeItems: "center", margin: "0 auto 18px" }}>
-                <Icon name="check" size={32} />
-              </div>
-              <h3 className="display-md" style={{ marginBottom: 10 }}>{t("survey_success_title", lang)}</h3>
-              <p className="lae-lead" style={{ margin: "0 auto 22px", maxWidth: "42ch" }}>
-                {lang === 'en' ? "Thanks" : "Takk"} {answers.name ? answers.name.split(" ")[0] : ""}! {t("survey_success_desc", lang)}
-              </p>
-              <Button variant="primary" iconRight="arrow" onClick={() => {
-                const el = document.getElementById("quote");
-                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: "smooth" });
-              }}>{t("survey_success_cta", lang)}</Button>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="lae-section lae-section--tight lae-survey-section" id="survey">
@@ -180,12 +134,9 @@ function QuickSurvey({ lang, onQuote }) {
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">{t("field_phone", lang)} <span className="req">*</span></label>
-                      <div style={{ display: "flex" }}>
-                        <span style={{ display: "flex", alignItems: "center", padding: "0 14px", background: "var(--surface-2)", border: "1px solid var(--line)", borderRight: "none", borderRadius: "var(--r-sm) 0 0 var(--r-sm)", fontWeight: 700, fontSize: ".92rem", color: "var(--ink-soft)", whiteSpace: "nowrap", userSelect: "none" }}>🇳🇴 +47</span>
-                        <input id="sv-phone" className="lae-input" value={answers.phone} placeholder="915 86 115"
-                          inputMode="tel" onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
-                          style={{ fontSize: "1rem", padding: "13px 14px", borderRadius: "0 var(--r-sm) var(--r-sm) 0", borderLeft: "none" }} />
-                      </div>
+                      <input id="sv-phone" className="lae-input" value={answers.phone} placeholder="+47 915 86 115"
+                        inputMode="tel" onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
+                        style={{ fontSize: "1rem", padding: "13px 14px" }} />
                       {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
                     </div>
                   </div>
@@ -195,11 +146,8 @@ function QuickSurvey({ lang, onQuote }) {
                     </button>
                     <span className="lae-survey__step">{t("survey_step", lang)} 4 {t("survey_of", lang)} {TOTAL_STEPS}</span>
                     <Button variant="primary" size="lg" iconRight="arrow" onClick={submit}
-                      data-analytics="survey_submit">{t("survey_submit", lang)}</Button>
+                      data-analytics="survey_submit">{t("survey_next", lang)}</Button>
                   </div>
-                  <p className="muted" style={{ fontSize: ".8rem", marginTop: 12 }}>
-                    {t("survey_consent", lang)}
-                  </p>
                 </>
               )}
 
@@ -233,18 +181,25 @@ const getMenuInterests = (lang) => [
   { value: "Streetfood", label: lang === 'en' ? "Streetfood" : "Streetfood" }
 ];
 
-function LeadForm({ lang, seed, onSeedConsumed }) {
+function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
   const [form, setForm] = useStateC({
-    name: "", phone: "", email: "", date: "", guests: "",
+    name: "", phone: "+47 ", email: "", date: "", guests: "",
     eventType: "", menus: [], fulfil: "Delivery", notes: "", message: "",
   });
-  const toggleMenu = (m) => setForm((f) => ({
-    ...f,
-    menus: f.menus.includes(m) ? f.menus.filter((x) => x !== m) : [...f.menus, m],
-  }));
+  const [loading, setLoading] = useStateC(false);
   const [sent, setSent] = useStateC(false);
   const [errors, setErrors] = useStateC({});
   const ref = useRefC(null);
+
+  useEffectC(() => {
+    if (!surveyData) return;
+    setForm((f) => ({
+      ...f,
+      name: surveyData.name || f.name,
+      phone: surveyData.phone || f.phone,
+      guests: surveyData.guests || f.guests,
+    }));
+  }, [surveyData]);
 
   useEffectC(() => {
     if (!seed) return;
@@ -269,20 +224,47 @@ function LeadForm({ lang, seed, onSeedConsumed }) {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     const err = {};
     if (!form.name.trim()) err.name = true;
-    if (!form.phone.trim() && !form.email.trim()) { err.phone = true; err.email = true; }
+
+    const digits = form.phone.replace(/\D/g, "");
+    if (!digits || digits.length < 8) {
+      err.phone = true;
+    }
+
     setErrors(err);
     if (Object.keys(err).length) return;
-    track("submit_quote", { eventType: form.eventType, guests: form.guests, fulfil: form.fulfil, menus: form.menus.join(", ") });
+
+    setLoading(true);
+
+    const payload = {
+      ...form,
+      eventType: surveyData ? surveyData.occasion : (form.eventType || ""),
+      date: surveyData ? surveyData.date : (form.date || ""),
+      email: surveyData ? surveyData.email : (form.email || ""),
+      source: "quote_form"
+    };
+
+    track("submit_quote", { eventType: payload.eventType, guests: payload.guests, fulfil: payload.fulfil, menus: payload.menus.join(", ") });
+    
     try {
       await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, menus: form.menus, source: "quote_form" }),
+        body: JSON.stringify(payload),
       });
     } catch (_) {}
-    window.location.href = "/thank-you";
+
+    setLoading(false);
+    setSent(true);
+
+    // Fire Meta Pixel lead event
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "Lead");
+    } else if (typeof fbq === "function") {
+      fbq("track", "Lead");
+    }
   };
 
   return (
@@ -319,15 +301,17 @@ function LeadForm({ lang, seed, onSeedConsumed }) {
 
           <Reveal delay={120}>
             {sent ? (
-              <div className="lae-form" style={{ display: "grid", placeItems: "center", textAlign: "center", minHeight: 420, gap: 14 }}>
+              <div className="lae-form" style={{ display: "grid", placeItems: "center", textAlign: "center", minHeight: 320, gap: 14 }}>
                 <span style={{ width: 64, height: 64, borderRadius: "50%", display: "grid", placeItems: "center", background: "color-mix(in srgb, var(--accent-2) 22%, var(--surface))", color: "var(--accent-2)" }}>
                   <Icon name="check" size={32} />
                 </span>
-                <h3 className="display-md">{t("form_success_title", lang)}</h3>
+                <h3 className="display-md">
+                  {lang === 'en' ? `Thanks, ${form.name}! We'll call you soon with a menu proposal.` : `Takk, ${form.name}! Vi ringer deg snart med menyforslag.`}
+                </h3>
                 <p className="muted" style={{ maxWidth: "40ch" }}>
                   {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
                 </p>
-                <Button variant="ghost" onClick={() => { setSent(false); }}>{t("form_success_another", lang)}</Button>
+                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", guests: "" })); }}>{t("form_success_another", lang)}</Button>
               </div>
             ) : (
               <form className="lae-form" onSubmit={submit} noValidate>
@@ -339,71 +323,26 @@ function LeadForm({ lang, seed, onSeedConsumed }) {
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-phone">{t("field_phone", lang)} <span className="req">*</span></label>
-                    <div style={{ display: "flex" }}>
-                      <span style={{ display: "flex", alignItems: "center", padding: "0 12px", background: "var(--surface-2)", border: "1px solid var(--line)", borderRight: "none", borderRadius: "var(--r-sm) 0 0 var(--r-sm)", fontWeight: 700, fontSize: ".88rem", color: "var(--ink-soft)", whiteSpace: "nowrap", userSelect: "none", ...(errors.phone ? { borderColor: "var(--accent)" } : {}) }}>🇳🇴 +47</span>
-                      <input id="f-phone" className="lae-input" value={form.phone} onChange={set("phone")}
-                             inputMode="tel" placeholder="915 86 115"
-                             style={{ borderRadius: "0 var(--r-sm) var(--r-sm) 0", borderLeft: "none", ...(errors.phone ? { borderColor: "var(--accent)" } : {}) }} />
-                    </div>
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-email">{t("field_email", lang)}</label>
-                    <input id="f-email" className="lae-input" value={form.email} onChange={set("email")}
-                           inputMode="email" placeholder="you@email.com" style={errors.email ? { borderColor: "var(--accent)" } : null} />
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-date">{t("field_date", lang)}</label>
-                    <input id="f-date" className="lae-input" type="date" value={form.date} onChange={set("date")} />
+                    <input id="f-phone" className="lae-input" value={form.phone} onChange={set("phone")}
+                           inputMode="tel" placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-guests">{t("field_guests", lang)}</label>
-                    <input id="f-guests" className="lae-input" type="number" min="1" value={form.guests} onChange={set("guests")} placeholder="e.g. 24" />
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-type">{t("field_type", lang)}</label>
-                    <select id="f-type" className="lae-input" value={form.eventType} onChange={set("eventType")}>
-                      <option value="" disabled>{t("field_choose", lang)}</option>
-                      {getEventTypes(lang).map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-                    </select>
-                  </div>
-                  <div className="lae-field col-2">
-                    <label>{t("field_interest", lang)} <span className="muted" style={{ fontWeight: 400 }}>{t("field_interest_sub", lang)}</span></label>
-                    <div className="lae-menu-chips">
-                      {getMenuInterests(lang).map((m) => (
-                        <button type="button" key={m.value} className={`lae-menu-chip ${form.menus.includes(m.value) ? "is-selected" : ""}`}
-                          onClick={() => toggleMenu(m.value)}>
-                          {form.menus.includes(m.value) && <Icon name="check" size={13} />}{m.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="lae-field">
-                    <label>{t("field_delivery", lang)}</label>
-                    <div className="seg" role="group" aria-label="Fulfilment">
-                      {["Delivery", "Pickup"].map((o) => (
-                        <button type="button" key={o} className={form.fulfil === o ? "is-on" : ""}
-                                onClick={() => setForm((f) => ({ ...f, fulfil: o }))}>
-                          {o === 'Delivery' ? (lang === 'en' ? 'Delivery' : 'Levering') : (lang === 'en' ? 'Pickup' : 'Henting')}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="lae-field col-2">
-                    <label htmlFor="f-notes">{t("field_notes", lang)}</label>
-                    <input id="f-notes" className="lae-input" value={form.notes} onChange={set("notes")}
-                           placeholder="e.g. 2 gluten-free, 1 vegan" />
-                  </div>
-                  <div className="lae-field col-2">
-                    <label htmlFor="f-msg">{t("field_msg", lang)}</label>
-                    <textarea id="f-msg" className="lae-input" value={form.message} onChange={set("message")}
-                               placeholder={lang === 'en' ? "Tell us anything else about your event…" : "Fortell oss gjerne mer om dine ønsker…"} />
+                    <input id="f-guests" className="lae-input" type="number" min="1" value={form.guests} onChange={set("guests")}
+                           placeholder={lang === 'en' ? "Number of guests" : "Antall gjester"} />
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginTop: 20 }}>
-                  <Button variant="primary" size="lg" type="submit" iconRight="arrow" data-analytics="submit_quote">
-                    {t("field_submit", lang)}
+                  <Button variant="primary" size="lg" type="submit" className="lae-form-submit-btn" iconRight={loading ? null : "arrow"} data-analytics="submit_quote" disabled={loading} style={{ width: "100%" }}>
+                    {loading ? (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
+                        <span className="lae-spinner" /> {lang === 'en' ? "Sending..." : "Sender..."}
+                      </span>
+                    ) : (
+                      t("field_submit", lang)
+                    )}
                   </Button>
-                  <span className="muted" style={{ fontSize: ".88rem" }}>{t("field_footer_note", lang)}</span>
+                  <span className="muted" style={{ fontSize: ".88rem", textAlign: "center", width: "100%" }}>{t("field_footer_note", lang)}</span>
                 </div>
               </form>
             )}
@@ -461,11 +400,8 @@ function FinalCTA({ lang, onQuote }) {
               <h2 className="display-lg" style={{ margin: "18px auto 14px", maxWidth: "16ch" }}>
                 {t("final_title", lang)}
               </h2>
-              <p className="lae-lead" style={{ margin: "0 auto 28px", textAlign: "center" }}>
-                {t("final_description", lang)}
-              </p>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                <Button variant="primary" size="lg" iconRight="arrow" data-analytics="start_quote" onClick={() => onQuote()}>
+                <Button variant="primary" size="lg" data-analytics="start_quote" onClick={() => onQuote()}>
                   {t("final_cta", lang)}
                 </Button>
                 <Button variant="ink" size="lg" icon="phone" as="a" href="tel:+4791586115"

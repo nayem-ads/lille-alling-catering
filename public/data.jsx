@@ -54,10 +54,10 @@ const BODY_FONTS = {
 
 // ---- Trust chips (hero) ----------------------------------------------------
 const TRUST_CHIPS = [
-  { icon: "leaf", label: { en: "Freshly prepared", no: "Nylaget fra bunnen" } },
-  { icon: "truck", label: { en: "Delivery within 40 km", no: "Levering innen 40 km" } },
-  { icon: "heart", label: { en: "Allergy-friendly options", no: "Allergivennlige alternativer" } },
-  { icon: "pin", label: { en: "Local Drammen café", no: "Lokal kafé i Drammen" } },
+  { icon: "check", label: { en: "✓ Freshly prepared today", no: "✓ Nylaget samme dag" } },
+  { icon: "truck", label: { en: "✓ Delivery within 40 km", no: "✓ Levering innen 40 km" } },
+  { icon: "heart", label: { en: "✓ Tailored for allergies", no: "✓ Tilpasset allergier" } },
+  { icon: "sparkle", label: { en: "✓ Free & non-binding", no: "✓ Gratis og uforpliktende" } },
 ];
 
 // ---- Intent selector -------------------------------------------------------
@@ -260,34 +260,26 @@ const MENU_ITEMS = [
 const STEPS = [
   {
     n: "01",
-    title: { en: "Choose your menu", no: "Velg meny" },
+    title: { en: "Send request", no: "Send forespørsel" },
     copy: { 
-      en: "Browse menus built for meetings, parties and celebrations — or tell us the occasion and we'll suggest.", 
-      no: "Se våre menyer tilpasset møter og festlige anledninger, eller fortell oss hva du planlegger så gir vi råd." 
+      en: "30 seconds — completely free and non-binding.", 
+      no: "30 sekunder — helt uforpliktende." 
     },
   },
   {
     n: "02",
-    title: { en: "Customise your order", no: "Tilpass bestillingen" },
+    title: { en: "Get menu proposal with price", no: "Få menyforslag med pris" },
     copy: { 
-      en: "Adjust portions, swap dishes, flag allergies and preferences. Nothing is fixed in stone.", 
-      no: "Juster porsjoner, bytt ut retter, og oppgi allergier eller ønsker. Ingenting er spikret i stein." 
+      en: "We'll call you quickly with a tailored proposal. Response within 2 hours (weekdays).", 
+      no: "Vi ringer deg raskt med et tilpasset forslag. Svar innen 2 timer (hverdager)." 
     },
   },
   {
     n: "03",
-    title: { en: "We prepare it fresh", no: "Vi lager maten fersk" },
+    title: { en: "We deliver ready", no: "Vi leverer ferdig" },
     copy: { 
-      en: "Everything is made fresh in our Drammen kitchen and arranged ready to serve — no assembly required.", 
-      no: "Alt tilberedes ferskt på vårt kjøkken i Drammen og anrettes klart til servering – ingen montering trengs." 
-    },
-  },
-  {
-    n: "04",
-    title: { en: "You enjoy the event", no: "Nyt selskapet" },
-    copy: { 
-      en: "We deliver within 40 km, on time. You stay with your guests while the food does the talking.", 
-      no: "Vi leverer presist innenfor 40 km. Du kan fokusere på gjestene dine mens maten gjør resten av jobben." 
+      en: "Ready to serve, right on time.", 
+      no: "Klar til servering, til avtalt tid." 
     },
   },
 ];
@@ -343,57 +335,57 @@ const FAQS = [
   { 
     q: { en: "How far do you deliver?", no: "Hvor langt leverer dere?" }, 
     a: { 
-      en: "We deliver within roughly 40 km of Drammen, covering the town and the surrounding region. If you're unsure whether you're in range, just ask — we'll confirm quickly.", 
-      no: "Vi leverer innenfor en radius på ca. 40 km fra Drammen, noe som dekker byen og omegn. Hvis du er usikker på om vi leverer til deg, er det bare å spørre – vi svarer raskt." 
-    } 
-  },
-  { 
-    q: { en: "Can you customise the menu?", no: "Kan menyen tilpasses?" }, 
-    a: { 
-      en: "Yes. Almost everything can be adjusted — swap dishes, change portions, combine menus or build something around your occasion. Tell us what you're picturing and we'll shape it.", 
-      no: "Ja. Nesten alt kan tilpasses – bytte ut retter, justere porsjoner, kombinere menyer eller sette opp noe helt unikt til ditt selskap. Fortell oss hva du ønsker, så ordner vi det." 
-    } 
-  },
-  { 
-    q: { en: "Do you offer vegetarian or gluten-free options?", no: "Har dere vegetariske eller glutenfrie alternativer?" }, 
-    a: { 
-      en: "We handle vegetarian, gluten-free, lactose-free and vegan requirements by request, and we take allergy notes seriously on every order. Add the details when you enquire.", 
-      no: "Vi tilbyr vegetariske, glutenfrie, laktosefrie og veganske alternativer etter ønske, og vi tar allergier på største alvor på alle bestillinger. Bare oppgi detaljene når du sender en forespørsel." 
+      en: "We deliver within 40 km of Drammen. Contact us if you are unsure.", 
+      no: "Vi leverer innen 40 km fra Drammen. Kontakt oss om du er usikker." 
     } 
   },
   { 
     q: { en: "How early should I order?", no: "Hvor tidlig må jeg bestille?" }, 
     a: { 
-      en: "The sooner the better, especially for weekends and larger events. For smaller meeting orders a few days' notice is usually fine — but get in touch and we'll tell you honestly what's possible.", 
-      no: "Jo tidligere, jo bedre – spesielt for helger og større selskaper. For mindre møtematbestillinger er noen dager som regel nok, men ta kontakt så gir vi deg et ærlig svar på hva vi kan få til." 
+      en: "Preferably 3–5 days in advance, but we do our best at short notice.", 
+      no: "Helst 3–5 dager før, men vi gjør vårt beste ved kort varsel." 
     } 
   },
   { 
-    q: { en: "Can I order online?", no: "Can jeg bestille direkte på nett?" }, 
+    q: { en: "Can you customise for allergies?", no: "Kan dere tilpasse for allergier?" }, 
     a: { 
-      en: "Yes — many menus can be ordered directly online. For tailored or larger events, send a quote request and we'll put together a recommendation.", 
-      no: "Ja – mange av menyene kan bestilles direkte i vår nettbutikk. For skreddersydde eller større arrangementer er det best å sende en forespørsel, så setter vi sammen et tilbud." 
+      en: "Yes. Specify allergies in the form and we will adapt the menus.", 
+      no: "Ja. Oppgi allergier i skjemaet, så tilpasser vi menyene." 
     } 
   },
   { 
-    q: { en: "Can I rent the café for a private event?", no: "Kan jeg leie kaféen til private selskaper?" }, 
+    q: { en: "What does it cost?", no: "Hva koster det?" }, 
     a: { 
-      en: "We do. Our café by the river can be booked for private gatherings, from 1,000 NOK per hour, and paired with catering so the room and the food arrive together.", 
-      no: "Ja, det kan du. Vår kafé ved elva kan leies til private samlinger fra kr 1 000 per time, og kombineres med catering slik at lokaler og mat er ordnet i én pakke." 
+      en: "Prices vary from 85 to 379 NOK per person, depending on the menu. You receive a precise quote after your inquiry.", 
+      no: "Prisene varierer fra 85 til 379 kr per person, avhengig av meny. Du får et nøyaktig tilbud etter forespørselen." 
+    } 
+  },
+  { 
+    q: { en: "Can I order online?", no: "Kan jeg bestille direkte på nett?" }, 
+    a: { 
+      en: "Yes, many menus can be ordered directly online. For events, send an inquiry.", 
+      no: "Ja, mange av våre menyer kan bestilles direkte i nettbutikken. For selskaper kan du sende en forespørsel." 
+    } 
+  },
+  { 
+    q: { en: "Can I rent the café for private events?", no: "Kan jeg leie kaféen til private selskaper?" }, 
+    a: { 
+      en: "Yes, the café by the river can be rented from 1,000 NOK/hour and paired with catering.", 
+      no: "Ja, kaféen ved elva kan leies fra kr 1 000 per time og kombineres med catering." 
     } 
   },
   { 
     q: { en: "Do prices apply per person?", no: "Gjelder prisene per person?" }, 
     a: { 
-      en: "It depends on the menu. Some are priced per person (like koldtbord and tapas), others per package or per item. Each menu states its unit, and we'll always confirm the total before you commit.", 
-      no: "Det avhenger av menyen. Noen er priset per person (som koldtbord og tapas), andre per pakke eller antall. Hver meny oppgir enhet, og vi bekrefter alltid totalprisen før du forplikter deg." 
+      en: "Yes, most menus are priced per person, while some are per package. This is always confirmed.", 
+      no: "Ja, de fleste menyer har priser per person, mens enkelte har priser per pakke. Dette bekreftes alltid." 
     } 
   },
   { 
     q: { en: "Can I call instead of filling the form?", no: "Kan jeg ringe dere i stedet for å fylle ut skjemaet?" }, 
     a: { 
-      en: "Of course. Call +47 915 86 115 during opening hours and you'll reach the team directly — sometimes a two-minute conversation is the fastest way to plan.", 
-      no: "Selvfølgelig. Ring oss på +47 915 86 115 i åpningstiden, så snakker du direkte med oss. Ofte er en to minutters prat den raskeste måten å planlegge på." 
+      en: "Of course. Call us at 915 86 115 and we'll help you plan.", 
+      no: "Selvfølgelig. Ring oss på 915 86 115, så hjelper vi deg med planleggingen." 
     } 
   },
 ];
@@ -405,24 +397,24 @@ const LOCALIZATION = {
   "nav_how": { en: "How it works", no: "Slik fungerer det" },
   "nav_reviews": { en: "Reviews", no: "Omtaler" },
   "nav_faq": { en: "FAQ", no: "Ofte stilte spørsmål" },
-  "nav_request_quote": { en: "Request quote", no: "Be om tilbud" },
+  "nav_request_quote": { en: "Get menu proposal", no: "Få menyforslag" },
   "nav_call": { en: "+47 915 86 115", no: "+47 915 86 115" },
   "nav_skip": { en: "Skip to menus", no: "Gå til menyer" },
 
   // Hero
-  "hero_tagline": { en: "Boutique catering by the river in Drammen", no: "Boutique-catering ved Drammenselva i Drammen" },
-  "hero_title_1": { en: "Food worth", no: "Mat verdt" },
-  "hero_title_2": { en: "gathering", no: "å samles" },
-  "hero_title_3": { en: " for.", no: " for." },
+  "hero_tagline": { en: "Boutique catering in Drammen · Response within 2 hours", no: "Boutique-catering i Drammen · Svar innen 2 timer" },
+  "hero_title_1": { en: "Catering from ", no: "Catering fra " },
+  "hero_title_2": { en: "local kitchen", no: "lokalt kjøkken" },
+  "hero_title_3": { en: " in Drammen", no: " i Drammen" },
   "hero_description": { 
-    en: "Freshly prepared menus for meetings, birthdays, weddings and celebrations — made the same day in our Drammen kitchen and delivered, ready to serve, within 40 km.", 
-    no: "Nylagede menyer for møter, bursdager, konfirmasjoner og feiringer – tilberedt samme dag i vårt kjøkken i Drammen og levert spiseklart innenfor 40 km." 
+    en: "Freshly prepared food for meetings, events and birthdays — made the same day in our café by the river.", 
+    no: "Nylaget mat til møter, selskaper og bursdager — tilberedt samme dag i kaféen vår ved Drammenselva." 
   },
-  "hero_cta": { en: "Request catering quote", no: "Be om uforpliktende tilbud" },
+  "hero_cta": { en: "Get free menu proposal →", no: "Få gratis menyforslag →" },
 
   // Occasions Section (Intent Selector)
   "intent_eyebrow": { en: "What are you planning?", no: "Hva planlegger du?" },
-  "intent_title": { en: "Start with the occasion.", no: "Start med anledningen." },
+  "intent_title": { en: "Choose by occasion", no: "Velg etter anledning" },
   "intent_description": { 
     en: "Tell us the kind of day you're hosting and we'll point you to the right menu — or build something around it.", 
     no: "Fortell oss litt om anledningen, så hjelper vi deg med å finne den rette menyen – eller skreddersyr noe eget." 
@@ -430,10 +422,10 @@ const LOCALIZATION = {
 
   // Menus Section
   "menu_eyebrow": { en: "The menus", no: "Menyene" },
-  "menu_title": { en: "Menus for every kind of table.", no: "Menyer for alle slags bord." },
+  "menu_title": { en: "Popular menus", no: "Populære menyer" },
   "menu_description": { 
-    en: "From quick møtemat to a full koldtbord — priced clearly, made fresh, and easy to tailor.", 
-    no: "Fra rask møtemat to bugnende koldtbord – tydelige priser, nylaget mat og enkelt å tilpasse." 
+    en: "All menus are made from scratch in our Drammen kitchen.", 
+    no: "Alle menyer lages fra bunnen i vårt kjøkken i Drammen." 
   },
   "menu_order_online": { en: "Order online", no: "Bestill på nett" },
   "menu_best_for": { en: "Best for: ", no: "Passer til: " },
@@ -442,11 +434,11 @@ const LOCALIZATION = {
   "menu_view_details": { en: "View details", no: "Se detaljer" },
 
   // How it works
-  "how_eyebrow": { en: "How it works", no: "Slik fungerer det" },
-  "how_title": { en: "Four easy steps, start to table.", no: "Fire enkle steg, fra bestilling til dekket bord." },
+  "how_eyebrow": { en: "Simple process", no: "Enkel prosess" },
+  "how_title": { en: "How it works", no: "Slik fungerer det" },
   "how_description": { 
-    en: "No back-and-forth, no guesswork. From first menu to the last plate, we keep it simple.", 
-    no: "Ingen gjetting eller stress. Vi gjør hele prosessen enkel og oversiktlig for deg." 
+    en: "No stress or unexpected costs. We make the whole process simple for you.", 
+    no: "Ingen stress eller uforutsette kostnader. Vi gjør hele prosessen enkel og oversiktlig for deg." 
   },
 
   // Customization
@@ -465,7 +457,7 @@ const LOCALIZATION = {
 
   // Local Trust
   "local_eyebrow": { en: "Local & dependable", no: "Lokalt og pålitelig" },
-  "local_title": { en: "A café you can actually visit.", no: "En kafé du faktisk kan besøke." },
+  "local_title": { en: "Made in Drammen, delivered to you", no: "Laget i Drammen, levert til deg" },
   "local_description": { 
     en: "We're not a faceless delivery brand. We're a café and kitchen on Losjeplassen, run by people who'll answer the phone.", 
     no: "Vi er ikke en ansiktsløs kjede. Vi er en koselig kafé og kjøkken på Losjeplassen, drevet av ekte folk som svarer når du ringer." 
@@ -475,12 +467,12 @@ const LOCALIZATION = {
 
   // Reviews
   "reviews_eyebrow": { en: "Kind words", no: "Hyggelige ord" },
-  "reviews_title": { en: "Guests remember the food.", no: "Gjestene husker maten." },
+  "reviews_title": { en: "What our customers say", no: "Dette sier kundene" },
   "reviews_chip": { en: "Loved by local hosts", no: "Elsket av lokale verter" },
 
   // Venue
   "venue_eyebrow": { en: "Need a place too?", no: "Trenger du lokaler også?" },
-  "venue_title": { en: "Host it at our café by the river.", no: "Arranger selskapet i vår kafé ved elva." },
+  "venue_title": { en: "Hold the party with us", no: "Hold selskapet hos oss" },
   "venue_description": { 
     en: "Book the room and the food together. Our café makes an easy, warm setting for birthdays, confirmations and company get-togethers — and we'll cater it end to end.", 
     no: "Lei lokalet og bestill maten samlet. Vår kafé gir en varm, intim og uformell ramme for bursdager, konfirmasjoner og firmafester." 
@@ -495,8 +487,8 @@ const LOCALIZATION = {
   "venue_call": { en: "Call to check dates", no: "Ring for avtale" },
   
   // Quick Survey Funnel
-  "survey_eyebrow": { en: "Quick start — 30 seconds", no: "Enkel forespørsel – 30 sekunder" },
-  "survey_title": { en: "Tell us what you're planning.", no: "Hva planlegger du?" },
+  "survey_eyebrow": { en: "Takes only 30 seconds", no: "Tar kun 30 sekunder" },
+  "survey_title": { en: "What is the occasion?", no: "Hva er anledningen?" },
   "survey_description": { 
     en: "Answer 4 quick questions and we'll match you with the perfect menu.", 
     no: "Svar på 4 kjappe spørsmål, så foreslår vi den perfekte menyen for deg." 
@@ -512,7 +504,7 @@ const LOCALIZATION = {
   "survey_step": { en: "Step", no: "Steg" },
   "survey_of": { en: "of", no: "av" },
   "survey_back": { en: "Back", no: "Tilbake" },
-  "survey_next": { en: "Next", no: "Neste" },
+  "survey_next": { en: "Next step →", no: "Neste steg →" },
   "survey_submit": { en: "Get menu recommendation", no: "Få menyforslag" },
   "survey_success_title": { en: "Got it — we'll be in touch!", no: "Mottatt – vi hører fra oss!" },
   "survey_success_desc": { en: "Thanks! Fill in a few more details below for a full quote, or we'll call you shortly.", no: "Takk! Legg gjerne til litt mer info under for et nøyaktig tilbud, eller så ringer vi deg om kort tid." },
@@ -521,10 +513,10 @@ const LOCALIZATION = {
 
   // Lead Form
   "form_eyebrow": { en: "Request a quote", no: "Be om uforpliktende tilbud" },
-  "form_title": { en: "Tell us about your event.", no: "Fortell om ditt arrangement." },
+  "form_title": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
   "form_description": { 
-    en: "Share a few details and we'll come back with a menu recommendation and a clear price — usually within a day.", 
-    no: "Del noen detaljer med oss, så sender vi et uforpliktende menyforslag med pris – som regel innen 24 timer." 
+    en: "Fill in 3 fields — we will call you with a proposal and price.", 
+    no: "Fyll ut 3 felt — vi ringer deg med forslag og pris." 
   },
   "form_call_lbl": { en: "Prefer to talk? Call us.", no: "Foretrekker du å ringe? Ring oss." },
   "form_email_lbl": { en: "Email your brief over.", no: "Send oss en e-post." },
@@ -546,18 +538,21 @@ const LOCALIZATION = {
   "field_delivery": { en: "Delivery or pickup", no: "Levering eller henting" },
   "field_notes": { en: "Allergies / preferences", no: "Allergier og spesielle behov" },
   "field_msg": { en: "Message", no: "Ytterligere beskrivelse / melding" },
-  "field_submit": { en: "Send catering request", no: "Send forespørsel" },
+  "field_submit": { en: "Get menu proposal — free →", no: "Få menyforslag — gratis →" },
   "field_footer_note": { en: "We'll get back to you as soon as possible.", no: "Vi svarer deg så fort vi overhodet kan." },
 
   // FAQ
   "faq_eyebrow": { en: "Good to know", no: "Verdt å vite" },
-  "faq_title": { en: "Questions, answered.", no: "Ofte stilte spørsmål." },
+  "faq_title": { en: "Frequently asked questions", no: "Vanlige spørsmål" },
 
   // Final CTA
-  "final_title": { en: "Make your event easier, warmer, and more delicious.", no: "Gjør arrangementet ditt enklere, lunere og mer smakfullt." },
-  "final_description": { en: "Tell us the occasion — we'll handle the food, so you stay with your guests.", no: "Fortell oss om anledningen – vi fikser maten, slik at du kan nyte tiden med gjestene dine." },
-  "final_cta": { en: "Request catering quote", no: "Få et pristilbud" },
-  "final_call": { en: "Call +47 915 86 115", no: "Ring oss på 915 86 115" },
+  "final_title": { en: "Ready to order?", no: "Klar til å bestille?" },
+  "final_description": { en: "Tell us the occasion — we'll handle the food, so you stay with your guests.", no: "Tell us the occasion — we'll handle the food, so you stay with your guests." },
+  "final_cta": { en: "Get free menu proposal →", no: "Få gratis menyforslag →" },
+  "final_call": { en: "Call us: 915 86 115", no: "Ring oss: 915 86 115" },
+
+  // Floating Widget (FloatCard)
+  "float_title": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
 
   // Footer
   "footer_tagline": { en: "A little café by the river, catering the meetings, milestones and quiet celebrations of Drammen.", no: "En koselig kafé ved elva som leverer mat til møter, merkedager og hyggelige selskaper i Drammen." },
