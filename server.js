@@ -75,7 +75,7 @@ app.post('/api/quote', async (req, res) => {
     );
 
     // Send notification email
-    const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no';
+    const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no, nayem.adsmanager@gmail.com';
     const menusList = Array.isArray(menus) ? menus.join(', ') : menus;
 
     await transporter.sendMail({
@@ -130,7 +130,7 @@ app.post('/api/survey', async (req, res) => {
       [name, phone, email, date, guests, occasion]
     );
 
-    const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no';
+    const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no, nayem.adsmanager@gmail.com';
     await transporter.sendMail({
       from: `"Lille Ælling Website" <${process.env.SENDER_EMAIL || process.env.SMTP_USER}>`,
       to: recipientEmail,
