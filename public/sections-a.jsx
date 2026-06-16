@@ -233,7 +233,6 @@ function MenuSection({ lang, onQuote }) {
                   <span className="slot-tag">{m.no[lang]}</span>
                 </div>
                 <div className="lae-menu-card__body">
-                  <div className="lae-bestfor">{t("menu_best_for", lang)}{m.bestFor[lang]}</div>
                   <h3 style={{ fontSize: "1.34rem" }}>{m.name[lang]}</h3>
                   <p className="muted" style={{ fontSize: ".92rem" }}>{m.desc[lang]}</p>
                   <div className="lae-priceblock" style={{ display: "flex", alignItems: "baseline", gap: 4 }}>

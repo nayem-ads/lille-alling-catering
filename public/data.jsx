@@ -410,7 +410,7 @@ const LOCALIZATION = {
     en: "Freshly prepared food for meetings, events and birthdays — made the same day in our café by the river.", 
     no: "Nylaget mat til møter, selskaper og bursdager — tilberedt samme dag i kaféen vår ved Drammenselva." 
   },
-  "hero_cta": { en: "Get free menu proposal →", no: "Få gratis menyforslag →" },
+  "hero_cta": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
 
   // Occasions Section (Intent Selector)
   "intent_eyebrow": { en: "What are you planning?", no: "Hva planlegger du?" },
@@ -488,7 +488,7 @@ const LOCALIZATION = {
   
   // Quick Survey Funnel
   "survey_eyebrow": { en: "Takes only 30 seconds", no: "Tar kun 30 sekunder" },
-  "survey_title": { en: "What is the occasion?", no: "Hva er anledningen?" },
+  "survey_title": { en: "Tailor your menu", no: "Skreddersy din meny" },
   "survey_description": { 
     en: "Answer 4 quick questions and we'll match you with the perfect menu.", 
     no: "Svar på 4 kjappe spørsmål, så foreslår vi den perfekte menyen for deg." 
@@ -504,7 +504,7 @@ const LOCALIZATION = {
   "survey_step": { en: "Step", no: "Steg" },
   "survey_of": { en: "of", no: "av" },
   "survey_back": { en: "Back", no: "Tilbake" },
-  "survey_next": { en: "Next step →", no: "Neste steg →" },
+  "survey_next": { en: "Next step", no: "Neste steg" },
   "survey_submit": { en: "Get menu recommendation", no: "Få menyforslag" },
   "survey_success_title": { en: "Got it — we'll be in touch!", no: "Mottatt – vi hører fra oss!" },
   "survey_success_desc": { en: "Thanks! Fill in a few more details below for a full quote, or we'll call you shortly.", no: "Takk! Legg gjerne til litt mer info under for et nøyaktig tilbud, eller så ringer vi deg om kort tid." },
@@ -538,7 +538,7 @@ const LOCALIZATION = {
   "field_delivery": { en: "Delivery or pickup", no: "Levering eller henting" },
   "field_notes": { en: "Allergies / preferences", no: "Allergier og spesielle behov" },
   "field_msg": { en: "Message", no: "Ytterligere beskrivelse / melding" },
-  "field_submit": { en: "Get menu proposal — free →", no: "Få menyforslag — gratis →" },
+  "field_submit": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
   "field_footer_note": { en: "We'll get back to you as soon as possible.", no: "Vi svarer deg så fort vi overhodet kan." },
 
   // FAQ

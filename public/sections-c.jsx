@@ -146,7 +146,7 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                     </button>
                     <span className="lae-survey__step">{t("survey_step", lang)} 4 {t("survey_of", lang)} {TOTAL_STEPS}</span>
                     <Button variant="primary" size="lg" iconRight="arrow" onClick={submit}
-                      data-analytics="survey_submit">{t("survey_next", lang)}</Button>
+                      data-analytics="survey_submit">{t("survey_submit", lang)}</Button>
                   </div>
                 </>
               )}

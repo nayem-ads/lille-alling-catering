@@ -68,7 +68,9 @@ function LocalTrust({ lang }) {
               <span className="ring" style={{ width: "88%", height: "88%", border: "1.5px solid color-mix(in srgb, var(--accent) 30%, transparent)" }} />
               <div style={{ position: "absolute", left: "50%", top: "10%", transform: "translateX(-50%)", fontSize: ".74rem", fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--accent)" }}>{t("local_radius", lang)}</div>
               <div className="pin" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                <DuckMark size={48} />
+                <div style={{ background: "var(--surface)", border: "1px solid var(--line)", padding: "10px 14px", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.03)", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <DuckMark size={28} />
+                </div>
                 <span style={{ background: "var(--ink)", color: "var(--surface)", fontSize: ".74rem", fontWeight: 700, padding: "5px 11px", borderRadius: 100, whiteSpace: "nowrap" }}>{t("local_tag", lang)}</span>
               </div>
             </div>

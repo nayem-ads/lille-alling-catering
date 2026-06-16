@@ -592,20 +592,58 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 }
 
 @media (max-width: 480px) {
+  /* Premium section spacing */
+  .lae-section {
+    padding-block: 48px !important;
+  }
+  .lae-section--tight {
+    padding-block: 32px !important;
+  }
+
+  /* Hero adjustments for high-end mobile UI/UX */
   .lae-hero {
-    padding-top: 60px !important;
-    padding-bottom: 20px !important;
+    padding-top: 52px !important;
+    padding-bottom: 24px !important;
   }
   .lae-hero h1 {
-    font-size: 24px !important;
-    line-height: 1.2 !important;
-    margin-bottom: 12px !important;
+    font-size: 30px !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 14px !important;
+  }
+  .lae-hero .accent-word {
+    color: #8C6239 !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
   }
   .lae-hero .lae-lead {
-    font-size: 14px !important;
-    line-height: 1.4 !important;
-    margin-bottom: 16px !important;
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+    color: #4E443C !important;
+    margin-bottom: 24px !important;
+    margin-inline: 0 !important;
   }
+  .lae-hero .lae-chip {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.04em !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    background: rgba(252, 250, 245, 0.7) !important;
+    border: 1px solid rgba(55, 48, 41, 0.08) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+    color: var(--ink-soft) !important;
+  }
+  .lae-hero .lae-btn--lg {
+    width: 100% !important;
+    height: 52px !important;
+    font-size: 0.98rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 24px -10px rgba(140, 98, 57, 0.4) !important;
+  }
+
+  /* Trust chips horizontal touch slider */
   .lae-hero-trust-chips {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -625,6 +663,51 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
   }
   .hide-on-mobile {
     display: none !important;
+  }
+
+  /* Clean, simplified popular menu cards to resolve "hurting eye" visual clutter */
+  .lae-menu-card {
+    background: #FCFAF5 !important;
+    border: 1px solid rgba(55, 48, 41, 0.06) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(55, 48, 41, 0.02) !important;
+  }
+  .lae-menu-card__body {
+    padding: 14px !important;
+    gap: 8px !important;
+  }
+  .lae-menu-card__body h3 {
+    font-family: var(--font-display) !important;
+    font-size: 1.22rem !important;
+    font-weight: 500 !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+    color: var(--ink) !important;
+  }
+  .lae-menu-card__body .lae-price {
+    font-family: var(--font-body) !important;
+    font-size: 0.96rem !important;
+    font-weight: 600 !important;
+    color: var(--ink-soft) !important;
+    margin-top: 2px !important;
+  }
+  .lae-menu-card__cta {
+    font-family: var(--font-body) !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    color: var(--accent) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-top: 6px !important;
+  }
+
+  /* Map/Radius card pin separation styling */
+  .lae-radius {
+    background: radial-gradient(circle at 50% 50%, rgba(176, 118, 58, 0.08) 0%, #FCFAF5 70%) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(55, 48, 41, 0.08) !important;
   }
 }
 
