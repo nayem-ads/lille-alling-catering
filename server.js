@@ -116,7 +116,7 @@ app.post('/api/quote', async (req, res) => {
   } catch (err) {
     console.error('Quote submit error:', err.message);
     // Still respond OK to user — don't show backend errors
-    res.json({ ok: true, warning: 'saved', debugError: err.message });
+    res.json({ ok: true, warning: 'saved' });
   }
 });
 
@@ -156,7 +156,7 @@ app.post('/api/survey', async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error('Survey error:', err.message);
-    res.json({ ok: true, warning: 'saved', debugError: err.message });
+    res.json({ ok: true });
   }
 });
 
