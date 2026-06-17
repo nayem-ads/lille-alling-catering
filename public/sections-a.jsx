@@ -111,7 +111,7 @@ function Hero({ lang, onQuote, onMenus }) {
               </p>
             </Reveal>
             <Reveal delay={220}>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 26 }}>
+              <div style={{ display: "block", width: "100%", marginBottom: 20 }}>
                 <Button variant="primary" size="lg" iconRight="arrow" data-analytics="start_quote"
                         onClick={onQuote}>{t("hero_cta", lang)}</Button>
               </div>

@@ -56,7 +56,7 @@
     }
     .lae-hero-video-bg video {
       width: 100%; height: 100%; object-fit: cover;
-      opacity: 0.38; filter: saturate(1.1) brightness(0.92);
+      opacity: 0.75; filter: saturate(1.1) brightness(0.92);
     }
     .lae-hero-video-bg::after {
       content: "";
@@ -67,11 +67,11 @@
         color-mix(in srgb, var(--bg) 20%, transparent) 100%);
     }
     @media (max-width: 760px) {
+      .lae-hero-video-bg video {
+        opacity: 0.75 !important;
+      }
       .lae-hero-video-bg::after {
-        background: linear-gradient(to bottom, 
-          rgba(246, 240, 238, 0.98) 0%, 
-          rgba(246, 240, 238, 0.96) 60%, 
-          rgba(246, 240, 238, 0.93) 100%) !important;
+        background: rgba(0, 0, 0, 0.32) !important;
       }
     }
 

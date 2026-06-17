@@ -103,9 +103,12 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                 <>
                   <p className="lae-survey__q">{t("survey_q_date", lang)}</p>
                   <p className="lae-survey__sub">{t("survey_sub_date", lang)}</p>
-                  <div style={{ maxWidth: 320 }}>
+                  <div style={{ position: "relative", maxWidth: 320 }}>
                     <input className="lae-input" type="date" value={answers.date} onChange={(e) => set("date", e.target.value)}
-                      style={{ fontSize: "1.05rem", padding: "14px 16px" }} />
+                      style={{ fontSize: "1.05rem", padding: "14px 16px", paddingRight: "44px" }} />
+                    <span style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", pointerEvents: "none", display: "flex", alignItems: "center" }}>
+                      <Icon name="calendar" size={20} />
+                    </span>
                   </div>
                   <div className="lae-survey__nav">
                     <button onClick={back} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ink-soft)", fontFamily: "var(--font-body)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
