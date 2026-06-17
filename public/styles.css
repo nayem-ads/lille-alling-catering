@@ -638,6 +638,33 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
   z-index: 5;
 }
 
+.lae-hero-trust-chips-marquee {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  user-select: none;
+  padding: 6px 0;
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  margin-top: 14px;
+}
+.lae-hero-trust-chips-track {
+  display: flex;
+  gap: 12px;
+  animation: lae-marquee-scroll 20s linear infinite;
+  width: max-content;
+}
+.lae-hero-trust-chips-track .lae-chip {
+  flex: 0 0 auto !important;
+}
+@keyframes lae-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.lae-hero-trust-chips-marquee:hover .lae-hero-trust-chips-track {
+  animation-play-state: paused;
+}
+
 @media (max-width: 480px) {
   /* Premium section spacing */
   .lae-section {
@@ -707,31 +734,10 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
   }
 
-  /* Trust chips horizontal touch slider with glassmorphism */
-  .lae-hero-trust-chips {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    gap: 8px !important;
-    padding: 8px 4px !important;
-    width: 100% !important;
-  }
-  .lae-hero-trust-chips::-webkit-scrollbar {
-    display: none !important;
-  }
-  .lae-hero-trust-chips .lae-chip {
-    flex: 0 0 auto !important;
+  /* Trust chips marquee mobile adjustments */
+  .lae-hero-trust-chips-track .lae-chip {
     font-size: 11px !important;
     padding: 4px 8px !important;
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-  }
-  .lae-hero-trust-chips .lae-chip svg {
-    color: #ffffff !important;
   }
   .hide-on-mobile {
     display: none !important;
