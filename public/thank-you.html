@@ -174,6 +174,40 @@
     }
     footer a { color: color-mix(in srgb,#F4EAD7 75%,transparent); }
     footer a:hover { color: #F4EAD7; }
+
+    /* Language Toggle styling matching landing page */
+    .lae-lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 3px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      user-select: none;
+    }
+    .lae-lang-btn {
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: none;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+      line-height: 1;
+    }
+    .lae-lang-btn:hover {
+      color: var(--ink);
+    }
+    .lae-lang-btn.is-active {
+      background: var(--accent);
+      color: #fff;
+    }
   </style>
 
   <!-- Meta Pixel Code -->
@@ -208,7 +242,13 @@
       </svg>
       <span>Lille Ælling<small>Catering · Drammen</small></span>
     </a>
-    <a href="tel:+4791586115" style="color:var(--accent);font-weight:700;font-size:.95rem;text-decoration:none">+47 915 86 115</a>
+    <div style="display: flex; align-items: center; gap: clamp(10px, 3vw, 20px);">
+      <div class="lae-lang-toggle">
+        <button id="lang-btn-no" class="lae-lang-btn" onclick="setLang('no')">NO</button>
+        <button id="lang-btn-en" class="lae-lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <a href="tel:+4791586115" id="nav-phone" style="color:var(--accent);font-weight:700;font-size:.95rem;text-decoration:none">+47 915 86 115</a>
+    </div>
   </nav>
 
   <main>
@@ -279,5 +319,111 @@
     <span>Designed By: Nay</span>
   </footer>
 
+  <script>
+    const translations = {
+      no: {
+        title: "Takk — Lille Ælling Catering",
+        navPhone: "+47 915 86 115",
+        h1: "Takk! Vi har mottatt<br/>din <em>forespørsel.</em>",
+        lead: "Din cateringforespørsel er mottatt. Vi kommer tilbake til deg med et menyforslag og en tydelig pris – som regel samme dag.",
+        step1Num: "01",
+        step1Title: "Vi vurderer din forespørsel",
+        step1Desc: "Vårt team går gjennom detaljene og velger de beste menyene for din anledning.",
+        step2Num: "02",
+        step2Title: "Du får et tydelig tilbud",
+        step2Desc: "Et menyforslag med fullstendig pris – ingen overraskelser, ingen gjettelek.",
+        step3Num: "03",
+        step3Title: "Vi leverer, du nyter",
+        step3Desc: "Ferskt, dandert og klart til servering. Du kan fokusere på gjestene dine.",
+        btnCall: "Ring oss: +47 915 86 115",
+        btnBack: "← Tilbake til menyer",
+        footer: "© " + new Date().getFullYear() + " Lille Ælling Café & Bar · Losjeplassen 2, 3015 Drammen"
+      },
+      en: {
+        title: "Thank You — Lille Ælling Catering",
+        navPhone: "+47 915 86 115",
+        h1: "Thank You! We've got<br/>your <em>request.</em>",
+        lead: "Your catering inquiry has been received. We'll come back to you with a menu recommendation and clear price — usually the same day.",
+        step1Num: "01",
+        step1Title: "We review your brief",
+        step1Desc: "Our team reads your details and picks the best menus for your occasion.",
+        step2Num: "02",
+        step2Title: "You get a clear quote",
+        step2Desc: "A menu recommendation with a full price — no surprises, no guesswork.",
+        step3Num: "03",
+        step3Title: "We deliver, you enjoy",
+        step3Desc: "Fresh, arranged and ready to serve. You stay with your guests.",
+        btnCall: "Call us: +47 915 86 115",
+        btnBack: "← Back to menus",
+        footer: "© " + new Date().getFullYear() + " Lille Ælling Café & Bar · Losjeplassen 2, 3015 Drammen"
+      }
+    };
+
+    function getLang() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        if (urlLang === 'en' || urlLang === 'no') return urlLang;
+        return localStorage.getItem("lae_lang") || "no";
+      } catch (_) {
+        return "no";
+      }
+    }
+
+    function setLang(lang) {
+      try {
+        localStorage.setItem("lae_lang", lang);
+      } catch (_) {}
+      updatePage(lang);
+    }
+
+    function updatePage(lang) {
+      const t = translations[lang];
+      document.title = t.title;
+      document.querySelector('h1').innerHTML = t.h1;
+      document.querySelector('.lead').textContent = t.lead;
+      
+      // Steps
+      const stepEls = document.querySelectorAll('.step');
+      if (stepEls.length >= 3) {
+        stepEls[0].querySelector('.step-num').textContent = t.step1Num;
+        stepEls[0].querySelector('h3').textContent = t.step1Title;
+        stepEls[0].querySelector('p').textContent = t.step1Desc;
+
+        stepEls[1].querySelector('.step-num').textContent = t.step2Num;
+        stepEls[1].querySelector('h3').textContent = t.step2Title;
+        stepEls[1].querySelector('p').textContent = t.step2Desc;
+
+        stepEls[2].querySelector('.step-num').textContent = t.step3Num;
+        stepEls[2].querySelector('h3').textContent = t.step3Title;
+        stepEls[2].querySelector('p').textContent = t.step3Desc;
+      }
+
+      // Buttons
+      const btnCall = document.querySelector('.btn-primary');
+      if (btnCall) {
+        btnCall.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h3l1.5 4.5L8.5 10a12 12 0 0 0 5.5 5.5l1.5-2 4.5 1.5V18a2 2 0 0 1-2 2A14 14 0 0 1 4 6a2 2 0 0 1 2-2Z"/></svg> ' + t.btnCall;
+      }
+      const btnBack = document.querySelector('.btn-ghost');
+      if (btnBack) {
+        btnBack.textContent = t.btnBack;
+      }
+
+      // Footer
+      const footerEl = document.querySelector('footer span');
+      if (footerEl) {
+        footerEl.textContent = t.footer;
+      }
+
+      // Toggle button UI
+      document.getElementById('lang-btn-no').className = 'lae-lang-btn' + (lang === 'no' ? ' is-active' : '');
+      document.getElementById('lang-btn-en').className = 'lae-lang-btn' + (lang === 'en' ? ' is-active' : '');
+    }
+
+    // Initial update
+    window.addEventListener('DOMContentLoaded', () => {
+      updatePage(getLang());
+    });
+  </script>
 </body>
 </html>

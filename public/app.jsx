@@ -78,7 +78,20 @@ function MobileBar({ lang, onQuote, onMenus }) {
 function App() {
   const [tweak, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [seed, setSeed] = useStateApp(null);
-  const [lang, setLang] = useStateApp("no");
+  const [lang, setLangState] = useStateApp(() => {
+    try {
+      return localStorage.getItem("lae_lang") || "no";
+    } catch (_) {
+      return "no";
+    }
+  });
+
+  const setLang = (l) => {
+    setLangState(l);
+    try {
+      localStorage.setItem("lae_lang", l);
+    } catch (_) {}
+  };
   const [surveyData, setSurveyData] = useStateApp(null);
 
   const handleSurveyComplete = (answers) => {

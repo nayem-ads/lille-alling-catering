@@ -54,10 +54,10 @@ const BODY_FONTS = {
 
 // ---- Trust chips (hero) ----------------------------------------------------
 const TRUST_CHIPS = [
-  { icon: "check", label: { en: "✓ Freshly prepared today", no: "✓ Nylaget samme dag" } },
-  { icon: "truck", label: { en: "✓ Delivery within 40 km", no: "✓ Levering innen 40 km" } },
-  { icon: "heart", label: { en: "✓ Tailored for allergies", no: "✓ Tilpasset allergier" } },
-  { icon: "sparkle", label: { en: "✓ Free & non-binding", no: "✓ Gratis og uforpliktende" } },
+  { icon: "check", label: { en: "Freshly prepared today", no: "Nylaget samme dag" } },
+  { icon: "truck", label: { en: "Delivery within 40 km", no: "Levering innen 40 km" } },
+  { icon: "heart", label: { en: "Tailored for allergies", no: "Tilpasset allergier" } },
+  { icon: "sparkle", label: { en: "Free & non-binding", no: "Gratis og uforpliktende" } },
 ];
 
 // ---- Intent selector -------------------------------------------------------
@@ -405,7 +405,7 @@ const LOCALIZATION = {
   "hero_tagline": { en: "Boutique catering in Drammen · Response within 2 hours", no: "Boutique-catering i Drammen · Svar innen 2 timer" },
   "hero_title_1": { en: "Local catering ", no: "Lokal catering " },
   "hero_title_2": { en: "by the river", no: "ved Drammenselva" },
-  "hero_title_3": { en: " in Drammen", no: " i Drammen" },
+  "hero_title_3": { en: " in\u00a0Drammen", no: " i\u00a0Drammen" },
   "hero_description": { 
     en: "Freshly prepared food for meetings, events and birthdays — made the same day in our café by the river.", 
     no: "Nylaget mat til møter, selskaper og bursdager — tilberedt samme dag i kaféen vår ved Drammenselva." 

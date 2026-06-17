@@ -197,7 +197,7 @@ image-slot {
                0 1px 2px rgba(0, 0, 0, 0.9) !important;
 }
 .lae-hero .accent-word { 
-  color: #E5C483 !important; 
+  color: #ffffff !important; 
   font-style: italic !important; 
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 
                0 4px 30px rgba(0, 0, 0, 0.7), 
@@ -438,6 +438,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
   background: color-mix(in srgb, var(--accent) 11%, var(--surface-2));
   border-top: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  padding-top: 24px !important;
 }
 .lae-survey-section .lae-eyebrow { color: color-mix(in srgb, var(--accent) 90%, var(--ink)); }
 
@@ -507,7 +508,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
                  0 1px 2px rgba(0, 0, 0, 0.9) !important;
   }
   .lae-hero .accent-word {
-    color: #E5C483 !important;
+    color: #ffffff !important;
     font-style: italic !important;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 
                  0 4px 30px rgba(0, 0, 0, 0.7), 
@@ -664,7 +665,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
                  0 1px 2px rgba(0, 0, 0, 0.9) !important;
   }
   .lae-hero .accent-word {
-    color: #E5C483 !important; /* Luxury champagne gold tone */
+    color: #ffffff !important; /* White accent word */
     font-style: italic !important;
     font-weight: 400 !important;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 
@@ -779,6 +780,12 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
     background: radial-gradient(circle at 50% 50%, rgba(176, 118, 58, 0.08) 0%, #FCFAF5 70%) !important;
     border-radius: 16px !important;
     border: 1px solid rgba(55, 48, 41, 0.08) !important;
+  }
+
+  /* Survey section tight padding top on mobile */
+  .lae-survey-section {
+    padding-top: 16px !important;
+    padding-bottom: 24px !important;
   }
 }
 

@@ -43,10 +43,13 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
     <section className="lae-section lae-section--tight lae-survey-section" id="survey">
       <div className="lae-wrap" style={{ maxWidth: 860 }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Eyebrow align="center">{t("survey_eyebrow", lang)}</Eyebrow>
-            <h2 className="display-lg" style={{ marginTop: 14 }}>{t("survey_title", lang)}</h2>
-            <p className="lae-lead" style={{ margin: "10px auto 0", maxWidth: "46ch" }}>
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <h2 className="display-lg" style={{ marginTop: 0, marginBottom: 8 }}>{t("survey_title", lang)}</h2>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--accent)", color: "#fff", padding: "4px 10px", borderRadius: "100px", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12 }}>
+              <Icon name="clock" size={13} stroke={2.2} />
+              <span>{t("survey_eyebrow", lang)}</span>
+            </div>
+            <p className="lae-lead" style={{ margin: "4px auto 0", maxWidth: "46ch", fontSize: "0.96rem", lineHeight: "1.45" }}>
               {t("survey_description", lang)}
             </p>
           </div>
