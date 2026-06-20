@@ -17,7 +17,7 @@ const TOTAL_STEPS = 4;
 
 function QuickSurvey({ lang, onQuote, onComplete }) {
   const [step, setStepS] = useStateC(1);
-  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "+47 ", email: "" });
+  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "+47 ", address: "", message: "" });
   const [phoneErr, setPhoneErr] = useStateC("");
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }));
@@ -134,9 +134,9 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                         onChange={(e) => set("name", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                     <div className="lae-field">
-                      <label htmlFor="sv-email">{t("field_email", lang)}</label>
-                      <input id="sv-email" type="email" name="email" autocomplete="email" className="lae-input" value={answers.email} placeholder="you@email.com"
-                        onChange={(e) => set("email", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                      <label htmlFor="sv-address">{t("field_address", lang)}</label>
+                      <input id="sv-address" name="address" autocomplete="street-address" className="lae-input" value={answers.address} placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"}
+                        onChange={(e) => set("address", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">{t("field_phone", lang)} <span className="req">*</span></label>
@@ -144,6 +144,11 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                         onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
                         style={{ fontSize: "1rem", padding: "13px 14px" }} />
                       {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
+                    </div>
+                    <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
+                      <label htmlFor="sv-message">{t("field_msg", lang)} <span className="muted" style={{ fontWeight: 400 }}>({lang === 'en' ? 'optional' : 'valgfritt'})</span></label>
+                      <input id="sv-message" name="message" className="lae-input" value={answers.message} placeholder={lang === 'en' ? "Any additional comments..." : "Eventuelle ønsker eller kommentarer..."}
+                        onChange={(e) => set("message", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                   </div>
                   <div className="lae-survey__nav" style={{ marginTop: 24 }}>
@@ -205,7 +210,8 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
       phone: surveyData.phone || f.phone,
       guests: surveyData.guests || f.guests,
       date: surveyData.date || f.date,
-      email: surveyData.email || f.email,
+      address: surveyData.address || f.address,
+      message: surveyData.message || f.message,
     }));
   }, [surveyData]);
 

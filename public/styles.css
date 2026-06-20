@@ -692,6 +692,9 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
                  0 4px 30px rgba(0, 0, 0, 0.7), 
                  0 1px 2px rgba(0, 0, 0, 0.9) !important;
   }
+  .lae-hero h1 br {
+    display: none !important;
+  }
   .lae-hero .accent-word {
     color: #ffffff !important; /* White accent word */
     font-style: italic !important;
@@ -701,7 +704,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
                  0 1px 2px rgba(0, 0, 0, 0.9) !important;
   }
   .lae-hero .lae-lead {
-    font-size: 12.5px !important;
+    font-size: 14.5px !important;
     line-height: 1.45 !important;
     color: #ffffff !important;
     margin-bottom: 16px !important;
@@ -882,5 +885,6 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 .lae-review figcaption {
   margin-top: auto !important;
 }
-
-
+.lae-hero .lae-chip .google-stars {
+  color: #FBBC05 !important;
+}

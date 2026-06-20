@@ -187,7 +187,7 @@ function Venue({ lang, onQuote }) {
                 </div>
 
                 <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                  <Button variant="primary" size="md" iconRight="arrow" onClick={onQuote}>
+                  <Button variant="primary" size="md" iconRight="arrow" onClick={() => onQuote("Venue + catering")}>
                     {t("venue_cta", lang)}
                   </Button>
                   <a className="lae-btn lae-btn--ghost lae-btn--md" href="tel:+4791586115" 

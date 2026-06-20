@@ -106,7 +106,7 @@ function Hero({ lang, onQuote, onMenus }) {
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
                   <strong style={{ fontWeight: 700, fontSize: "0.82rem" }}>4.9</strong>
-                  <span style={{ display: "inline-flex", gap: 1, color: "#FBBC05" }}>
+                  <span className="google-stars" style={{ display: "inline-flex", gap: 1, color: "#FBBC05" }}>
                     {[0,1,2,3,4].map((i) => <Icon key={i} name="star" size={11} />)}
                   </span>
                   <span style={{ opacity: 0.9, fontSize: "0.74rem" }}>
@@ -237,7 +237,7 @@ function MenuSection({ lang, onQuote }) {
               {t("menu_description", lang)}
             </p></Reveal>
           </div>
-          <Reveal delay={120}>
+           <Reveal delay={120} className="hide-on-mobile">
             <Button variant="ghost" iconRight="arrow" data-analytics="view_menu"
                     as="a" href="https://lilleelling.no/collections/catering" target="_blank" rel="noopener"
                     onClick={() => track("view_menu", { from: "menu_header" })}>
