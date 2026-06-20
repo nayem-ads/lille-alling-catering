@@ -189,7 +189,7 @@ const getMenuInterests = (lang) => [
 
 function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
   const [form, setForm] = useStateC({
-    name: "", phone: "+47 ", email: "", date: "", guests: "",
+    name: "", phone: "+47 ", email: "", address: "", date: "", guests: "",
     eventType: "", menus: [], fulfil: "Delivery", notes: "", message: "",
   });
   const [loading, setLoading] = useStateC(false);
@@ -204,6 +204,8 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
       name: surveyData.name || f.name,
       phone: surveyData.phone || f.phone,
       guests: surveyData.guests || f.guests,
+      date: surveyData.date || f.date,
+      email: surveyData.email || f.email,
     }));
   }, [surveyData]);
 
@@ -233,7 +235,8 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     if (loading) return;
     const err = {};
     if (!form.name.trim()) err.name = true;
-    if (!form.email.trim() || !form.email.includes("@")) err.email = true;
+    if (!form.address.trim()) err.address = true;
+    if (!form.date.trim()) err.date = true;
 
     const digits = form.phone.replace(/\D/g, "");
     if (!digits || digits.length < 8) {
@@ -248,8 +251,8 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     const payload = {
       ...form,
       eventType: surveyData ? surveyData.occasion : (form.eventType || ""),
-      date: surveyData ? surveyData.date : (form.date || ""),
-      email: surveyData ? surveyData.email : (form.email || ""),
+      date: form.date || (surveyData ? surveyData.date : ""),
+      email: form.email || (surveyData ? surveyData.email : ""),
       source: "quote_form"
     };
 
@@ -318,25 +321,30 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
                 <p className="muted" style={{ maxWidth: "40ch" }}>
                   {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
                 </p>
-                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", guests: "" })); }}>{t("form_success_another", lang)}</Button>
+                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", date: "", guests: "" })); }}>{t("form_success_another", lang)}</Button>
               </div>
             ) : (
               <form className="lae-form" onSubmit={submit} noValidate>
-                <div className="lae-field-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+                <div className="lae-field-grid">
                   <div className="lae-field">
                     <label htmlFor="f-name">{t("field_name", lang)} <span className="req">*</span></label>
                     <input id="f-name" name="name" autocomplete="name" required className="lae-input" value={form.name} onChange={set("name")}
                            placeholder={lang === 'en' ? "Your name" : "Ditt navn"} style={errors.name ? { borderColor: "var(--accent)" } : null} />
                   </div>
                   <div className="lae-field">
-                    <label htmlFor="f-email">{t("field_email", lang)} <span className="req">*</span></label>
-                    <input id="f-email" type="email" name="email" autocomplete="email" required className="lae-input" value={form.email} onChange={set("email")}
-                           placeholder="you@email.com" style={errors.email ? { borderColor: "var(--accent)" } : null} />
-                  </div>
-                  <div className="lae-field">
                     <label htmlFor="f-phone">{t("field_phone", lang)} <span className="req">*</span></label>
                     <input id="f-phone" type="tel" name="phone" autocomplete="tel" required className="lae-input" value={form.phone} onChange={set("phone")}
                            placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
+                  </div>
+                  <div className="lae-field col-2">
+                    <label htmlFor="f-address">{t("field_address", lang)} <span className="req">*</span></label>
+                    <input id="f-address" name="address" autocomplete="street-address" required className="lae-input" value={form.address} onChange={set("address")}
+                           placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"} style={errors.address ? { borderColor: "var(--accent)" } : null} />
+                  </div>
+                  <div className="lae-field">
+                    <label htmlFor="f-date">{t("field_date", lang)} <span className="req">*</span></label>
+                    <input id="f-date" type="date" name="date" required className="lae-input" value={form.date} onChange={set("date")}
+                           style={errors.date ? { borderColor: "var(--accent)" } : null} />
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-guests">{t("field_guests", lang)}</label>

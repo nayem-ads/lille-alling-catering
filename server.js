@@ -29,6 +29,7 @@ pool.query(`
     name TEXT,
     phone TEXT,
     email TEXT,
+    address TEXT,
     event_date TEXT,
     guests TEXT,
     event_type TEXT,
@@ -39,7 +40,15 @@ pool.query(`
     source TEXT DEFAULT 'quote_form',
     created_at TIMESTAMPTZ DEFAULT NOW()
   )
-`).then(() => console.log('✅ DB table ready'))
+`).then(async () => {
+  console.log('✅ DB table ready');
+  try {
+    await pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS address TEXT;`);
+    console.log('✅ DB column "address" verified/added');
+  } catch (alterErr) {
+    console.error('⚠️ DB alter table warning:', alterErr.message);
+  }
+})
   .catch(err => console.error('❌ DB init error:', err.message));
 
 // ── Email transporter ─────────────────────────────────────────────────────────
@@ -57,19 +66,19 @@ const transporter = nodemailer.createTransport({
 
 // Main quote form submission
 app.post('/api/quote', async (req, res) => {
-  const { name, phone, email, date, guests, eventType, menus, fulfil, notes, message, source } = req.body;
+  const { name, phone, email, address, date, guests, eventType, menus, fulfil, notes, message, source } = req.body;
 
   // Basic validation
-  if (!phone && !email) {
-    return res.status(400).json({ ok: false, error: 'Phone or email required' });
+  if (!phone) {
+    return res.status(400).json({ ok: false, error: 'Phone required' });
   }
 
   try {
     // Save to DB
     await pool.query(
-      `INSERT INTO inquiries (name, phone, email, event_date, guests, event_type, menus, fulfil, notes, message, source)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-      [name, phone, email, date, guests, eventType,
+      `INSERT INTO inquiries (name, phone, email, address, event_date, guests, event_type, menus, fulfil, notes, message, source)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      [name, phone, email, address, date, guests, eventType,
        Array.isArray(menus) ? menus.join(', ') : menus,
        fulfil, notes, message, source || 'quote_form']
     );
@@ -93,6 +102,7 @@ app.post('/api/quote', async (req, res) => {
               ${row('Name', name)}
               ${row('Phone', phone ? `<a href="tel:${phone}">${phone}</a>` : '—')}
               ${row('Email', email ? `<a href="mailto:${email}">${email}</a>` : '—')}
+              ${row('Address', address)}
               ${row('Event type', eventType)}
               ${row('Event date', date)}
               ${row('Guests', guests)}

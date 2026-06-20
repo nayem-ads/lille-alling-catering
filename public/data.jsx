@@ -515,8 +515,8 @@ const LOCALIZATION = {
   "form_eyebrow": { en: "Request a quote", no: "Be om uforpliktende tilbud" },
   "form_title": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
   "form_description": { 
-    en: "Fill in 3 fields — we will call you with a proposal and price.", 
-    no: "Fyll ut 3 felt — vi ringer deg med forslag og pris." 
+    en: "Fill in the fields — we will call you with a proposal and price.", 
+    no: "Fyll ut feltene — vi ringer deg med forslag og pris." 
   },
   "form_call_lbl": { en: "Prefer to talk? Call us.", no: "Foretrekker du å ringe? Ring oss." },
   "form_email_lbl": { en: "Email your brief over.", no: "Send oss en e-post." },
@@ -528,6 +528,7 @@ const LOCALIZATION = {
   // Fields
   "field_name": { en: "Name", no: "Navn" },
   "field_phone": { en: "Phone", no: "Telefon" },
+  "field_address": { en: "Delivery address", no: "Leveringsadresse" },
   "field_email": { en: "Email", no: "E-post" },
   "field_date": { en: "Event date", no: "Dato for selskapet" },
   "field_guests": { en: "Guest count", no: "Antall gjester" },
