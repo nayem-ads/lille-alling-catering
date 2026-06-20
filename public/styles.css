@@ -414,11 +414,11 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 @media (max-width: 900px){ .lae-floatcard { display: none; } }
 
 /* ---- Sticky mobile CTA --------------------------------------------------- */
-.lae-mobilebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; display: none;
+.lae-mobilebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; display: none !important;
   grid-template-columns: auto 1fr auto; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
   background: color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter: blur(14px);
   border-top: 1px solid var(--line); box-shadow: 0 -10px 30px -22px var(--shadow); }
-@media (max-width: 760px){ .lae-mobilebar { display: grid; } body { padding-bottom: 76px; } }
+@media (max-width: 760px){ .lae-mobilebar { display: none !important; } }
 .lae-mobilebar .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
   border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
 

@@ -5,16 +5,34 @@ const nodemailer = require('nodemailer');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
+const compression = require('compression');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
+app.use(compression());
 app.use(helmet({ contentSecurityPolicy: false })); // CSP off — inline scripts in HTML
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve static assets with aggressive cache control headers for speed
+app.use(express.static(path.join(__dirname, 'public'), {
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else if (
+      filePath.endsWith('.js') ||
+      filePath.endsWith('.css') ||
+      filePath.match(/\.(webp|png|jpg|jpeg|gif|ico|svg|mp4)$/) ||
+      filePath.match(/\.(woff|woff2|eot|ttf|otf)$/)
+    ) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 
 // ── PostgreSQL ────────────────────────────────────────────────────────────────
 const pool = new Pool({

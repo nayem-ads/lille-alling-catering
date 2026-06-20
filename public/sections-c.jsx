@@ -15,10 +15,21 @@ const GUEST_OPTIONS = ["1–10", "10–25", "25–50", "50–100", "100+"];
 
 const TOTAL_STEPS = 4;
 
+const getTodayDateString = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 function QuickSurvey({ lang, onQuote, onComplete }) {
   const [step, setStepS] = useStateC(1);
-  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: "", name: "", phone: "+47 ", address: "", message: "" });
+  const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: getTodayDateString(), name: "", phone: "+47 ", address: "", message: "" });
   const [phoneErr, setPhoneErr] = useStateC("");
+  const [nameErr, setNameErr] = useStateC("");
+  const [addressErr, setAddressErr] = useStateC("");
+  const surveyDateRef = useRefC(null);
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }));
   const progress = `${Math.round((step / TOTAL_STEPS) * 100)}%`;
@@ -26,17 +37,68 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
   const next = () => setStepS((s) => Math.min(s + 1, TOTAL_STEPS));
   const back = () => setStepS((s) => Math.max(s - 1, 1));
 
-  const submit = () => {
+  const submit = async () => {
+    let hasErr = false;
+
+    if (!answers.name.trim()) {
+      setNameErr(lang === 'en' ? "Please enter your name." : "Vennligst oppgi navn.");
+      hasErr = true;
+    } else {
+      setNameErr("");
+    }
+
+    if (!answers.address.trim()) {
+      setAddressErr(lang === 'en' ? "Please enter your delivery address." : "Vennligst oppgi leveringsadresse.");
+      hasErr = true;
+    } else {
+      setAddressErr("");
+    }
+
     const digits = answers.phone.replace(/\D/g, "");
     if (!digits || digits.length < 8) {
       setPhoneErr(lang === 'en' ? "Please enter a valid phone number (min 8 digits)." : "Vennligst oppgi et gyldig telefonnummer (minst 8 siffer).");
-      return;
+      hasErr = true;
+    } else {
+      setPhoneErr("");
     }
-    setPhoneErr("");
+
+    if (hasErr) return;
+
     track("survey_submit", { occasion: answers.occasion, guests: answers.guests });
-    if (onComplete) {
-      onComplete(answers);
+
+    const payload = {
+      name: answers.name,
+      phone: answers.phone,
+      email: "",
+      address: answers.address,
+      date: answers.date || getTodayDateString(),
+      guests: answers.guests,
+      eventType: answers.occasion,
+      menus: [],
+      fulfil: "Delivery",
+      notes: "",
+      message: answers.message,
+      source: "survey_funnel"
+    };
+
+    track("submit_quote", { eventType: payload.eventType, guests: payload.guests, fulfil: payload.fulfil, menus: "" });
+
+    try {
+      await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (_) {}
+
+    // Fire Meta Pixel lead event
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "Lead");
+    } else if (typeof fbq === "function") {
+      fbq("track", "Lead");
     }
+
+    window.location.href = "/thank-you";
   };
 
   return (
@@ -107,9 +169,11 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                   <p className="lae-survey__q">{t("survey_q_date", lang)}</p>
                   <p className="lae-survey__sub">{t("survey_sub_date", lang)}</p>
                   <div style={{ position: "relative", maxWidth: 320 }}>
-                    <input className="lae-input" type="date" value={answers.date} onChange={(e) => set("date", e.target.value)}
+                    <input ref={surveyDateRef} className="lae-input" type="date" value={answers.date} onChange={(e) => set("date", e.target.value)}
+                      onClick={(e) => { try { e.target.showPicker(); } catch (_) {} }}
                       style={{ fontSize: "1.05rem", padding: "14px 16px", paddingRight: "44px" }} />
-                    <span style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", pointerEvents: "none", display: "flex", alignItems: "center" }}>
+                    <span onClick={() => { if (surveyDateRef.current) { try { surveyDateRef.current.showPicker(); } catch (_) { surveyDateRef.current.focus(); } } }}
+                      style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", cursor: "pointer", display: "flex", alignItems: "center" }}>
                       <Icon name="calendar" size={20} />
                     </span>
                   </div>
@@ -129,20 +193,22 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                   <p className="lae-survey__sub">{t("survey_sub_contact", lang)}</p>
                   <div className="lae-survey__fields" style={{ gridTemplateColumns: "1fr 1fr" }}>
                     <div className="lae-field">
-                      <label htmlFor="sv-name">{t("field_name", lang)}</label>
+                      <label htmlFor="sv-name">{t("field_name", lang)} <span className="req">*</span></label>
                       <input id="sv-name" name="name" autocomplete="name" className="lae-input" value={answers.name} placeholder={lang === 'en' ? "Your full name" : "Ditt fulle navn"}
-                        onChange={(e) => set("name", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                        onChange={(e) => { set("name", e.target.value); setNameErr(""); }} style={{ fontSize: "1rem", padding: "13px 14px", ...(nameErr ? { borderColor: "var(--accent)" } : null) }} />
+                      {nameErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{nameErr}</span>}
                     </div>
                     <div className="lae-field">
-                      <label htmlFor="sv-address">{t("field_address", lang)}</label>
+                      <label htmlFor="sv-address">{t("field_address", lang)} <span className="req">*</span></label>
                       <input id="sv-address" name="address" autocomplete="street-address" className="lae-input" value={answers.address} placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"}
-                        onChange={(e) => set("address", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                        onChange={(e) => { set("address", e.target.value); setAddressErr(""); }} style={{ fontSize: "1rem", padding: "13px 14px", ...(addressErr ? { borderColor: "var(--accent)" } : null) }} />
+                      {addressErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{addressErr}</span>}
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">{t("field_phone", lang)} <span className="req">*</span></label>
                       <input id="sv-phone" type="tel" name="phone" autocomplete="tel" className="lae-input" value={answers.phone} placeholder="+47 915 86 115"
                         onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
-                        style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                        style={{ fontSize: "1rem", padding: "13px 14px", ...(phoneErr ? { borderColor: "var(--accent)" } : null) }} />
                       {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
@@ -194,13 +260,24 @@ const getMenuInterests = (lang) => [
 
 function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
   const [form, setForm] = useStateC({
-    name: "", phone: "+47 ", email: "", address: "", date: "", guests: "",
+    name: "", phone: "+47 ", email: "", address: "", date: getTodayDateString(), guests: "",
     eventType: "", menus: [], fulfil: "Delivery", notes: "", message: "",
   });
   const [loading, setLoading] = useStateC(false);
   const [sent, setSent] = useStateC(false);
   const [errors, setErrors] = useStateC({});
   const ref = useRefC(null);
+  const leadDateRef = useRefC(null);
+
+  const handleLeadDateIconClick = () => {
+    if (leadDateRef.current) {
+      try {
+        leadDateRef.current.showPicker();
+      } catch (_) {
+        leadDateRef.current.focus();
+      }
+    }
+  };
 
   useEffectC(() => {
     if (!surveyData) return;
@@ -257,7 +334,7 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     const payload = {
       ...form,
       eventType: surveyData ? surveyData.occasion : (form.eventType || ""),
-      date: form.date || (surveyData ? surveyData.date : ""),
+      date: form.date || (surveyData ? surveyData.date : getTodayDateString()),
       email: form.email || (surveyData ? surveyData.email : ""),
       source: "quote_form"
     };
@@ -273,7 +350,6 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     } catch (_) {}
 
     setLoading(false);
-    setSent(true);
 
     // Fire Meta Pixel lead event
     if (typeof window.fbq === "function") {
@@ -281,6 +357,8 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     } else if (typeof fbq === "function") {
       fbq("track", "Lead");
     }
+
+    window.location.href = "/thank-you";
   };
 
   return (
@@ -327,7 +405,7 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
                 <p className="muted" style={{ maxWidth: "40ch" }}>
                   {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
                 </p>
-                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", eventType: "", date: "", guests: "" })); }}>{t("form_success_another", lang)}</Button>
+                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", eventType: "", date: getTodayDateString(), guests: "" })); }}>{t("form_success_another", lang)}</Button>
               </div>
             ) : (
               <form className="lae-form" onSubmit={submit} noValidate>
@@ -358,8 +436,14 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-date">{t("field_date", lang)} <span className="req">*</span></label>
-                    <input id="f-date" type="date" name="date" required className="lae-input" value={form.date} onChange={set("date")}
-                           style={errors.date ? { borderColor: "var(--accent)" } : null} />
+                    <div style={{ position: "relative" }}>
+                      <input id="f-date" type="date" ref={leadDateRef} name="date" required className="lae-input" value={form.date} onChange={set("date")}
+                             onClick={(e) => { try { e.target.showPicker(); } catch (_) {} }}
+                             style={{ paddingRight: "44px", ...(errors.date ? { borderColor: "var(--accent)" } : null) }} />
+                      <span onClick={handleLeadDateIconClick} style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", cursor: "pointer", display: "flex", alignItems: "center" }}>
+                        <Icon name="calendar" size={20} />
+                      </span>
+                    </div>
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-guests">{t("field_guests", lang)}</label>

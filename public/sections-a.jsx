@@ -224,8 +224,7 @@ function IntentSelector({ lang, onTarget }) {
 
 /* ---- Menu discovery ------------------------------------------------------ */
 function MenuSection({ lang, onQuote }) {
-  const [filter, setFilter] = useStateA(MENU_FILTERS[0].id);
-  const items = MENU_ITEMS.filter((m) => m.tags.includes(filter));
+  const items = MENU_ITEMS;
   return (
     <section className="lae-section" id="menus">
       <div className="lae-wrap">
@@ -246,19 +245,9 @@ function MenuSection({ lang, onQuote }) {
           </Reveal>
         </div>
 
-        <Reveal>
-          <div className="lae-filters" role="tablist" aria-label="Menu categories">
-            {MENU_FILTERS.map((f) => (
-              <button key={f.id} role="tab" aria-selected={filter === f.id}
-                      className={`lae-filter ${filter === f.id ? "is-active" : ""}`}
-                      onClick={() => { setFilter(f.id); track("view_menu", { category: f.id }); }}>{f[lang]}</button>
-            ))}
-          </div>
-        </Reveal>
-
         <div className="lae-menu-grid" style={{ marginTop: 26 }}>
           {items.map((m, i) => (
-            <Reveal key={m.name.en + filter} delay={(i % 3) * 80}>
+            <Reveal key={m.name.en} delay={(i % 3) * 80}>
               <article className="lae-menu-card">
                 <div className="lae-menu-card__media">
                   {window.MENU_PHOTOS && window.MENU_PHOTOS[m.name.en]

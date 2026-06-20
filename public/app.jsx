@@ -10,12 +10,11 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "bodyFont": "Manrope",
   "texture": true
 }/*EDITMODE-END*/;
-
 /* ---- Desktop floating quote card ----------------------------------------- */
 function FloatCard({ lang, onOpen, onSubmit }) {
   const [hidden, setHidden] = useStateApp(true);
   const [dismissed, setDismissed] = useStateApp(false);
-  const [v, setV] = useStateApp({ type: "Office meeting", guests: "", date: "" });
+  const [v, setV] = useStateApp({ type: "Office meeting", guests: "", date: getTodayDateString() });
   useEffectApp(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -146,8 +145,6 @@ function App() {
         <FinalCTA lang={lang} onQuote={() => goQuote()} />
       </main>
       <Footer lang={lang} />
-
-      <MobileBar lang={lang} onQuote={() => goQuote()} onMenus={goMenus} />
 
       <TweaksPanel title="Tweaks">
         <TweakSection label="Palette" />
