@@ -206,9 +206,13 @@ function IntentSelector({ lang, onTarget }) {
               <div className="lae-intent" role="button" tabIndex={0}
                    onClick={() => onTarget(it.target)}
                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTarget(it.target); } }}
-                   style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "24px 16px", minHeight: "120px" }}>
+                   style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 16px", minHeight: "160px" }}>
                 <div className="lae-intent__ico" style={{ marginBottom: 12 }}><Icon name={it.icon} size={28} /></div>
-                <h3 style={{ fontSize: "1.12rem", margin: 0 }}>{it.title[lang]}</h3>
+                <h3 style={{ fontSize: "1.08rem", margin: "0 0 10px", fontWeight: 600 }}>{it.title[lang]}</h3>
+                <div className="lae-intent__cta" style={{ marginTop: "auto" }}>
+                  <span>{it.cta[lang]}</span>
+                  <Icon name="arrow" size={14} />
+                </div>
               </div>
             </Reveal>
           ))}

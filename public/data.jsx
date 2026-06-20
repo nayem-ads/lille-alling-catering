@@ -402,13 +402,13 @@ const LOCALIZATION = {
   "nav_skip": { en: "Skip to menus", no: "Gå til menyer" },
 
   // Hero
-  "hero_tagline": { en: "Boutique catering in Drammen · Response within 2 hours", no: "Boutique-catering i Drammen · Svar innen 2 timer" },
-  "hero_title_1": { en: "Fresh, homemade catering ", no: "Fersk, hjemmelaget catering " },
-  "hero_title_2": { en: "delivered to your door", no: "levert rett på døren" },
-  "hero_title_3": { en: " in\u00a0Drammen", no: " i\u00a0Drammen" },
+  "hero_tagline": { en: "Catering in Drammen · Response within 2 hours", no: "Catering i Drammen · Svar innen 2 timer" },
+  "hero_title_1": { en: "Catering ", no: "Catering " },
+  "hero_title_2": { en: "Drammen", no: "Drammen" },
+  "hero_title_3": { en: "", no: "" },
   "hero_description": { 
-    en: "Freshly prepared food for meetings, events and birthdays — made the same day in our café by the river.", 
-    no: "Nylaget mat til møter, selskaper og bursdager — tilberedt samme dag i kaféen vår ved Drammenselva." 
+    en: "At Lille Ælling you will find tasty menus for both small and large occasions. Whether it is a meeting, lunch or celebration, you can easily find your favorites and order directly in our online shop.", 
+    no: "Hos Lille Ælling finner du smakfulle menyer til både små og store anledninger. Enten det er møte, lunsj eller feiring, kan du enkelt finne dine favoritter og bestille direkte i nettbutikken vår." 
   },
   "hero_cta": { en: "Get free menu proposal", no: "Få gratis menyforslag" },
 
@@ -482,7 +482,7 @@ const LOCALIZATION = {
   "venue_stat_standing_n": { en: "70", no: "70" },
   "venue_stat_standing_txt": { en: "standing reception", no: "stående mottakelse" },
   "venue_stat_price_n": { en: "1 000", no: "1 000" },
-  "venue_stat_price_txt": { en: "NOK / hour, from", no: "kr / time, fra" },
+  "venue_stat_price_txt": { en: "/ hour, from", no: "/ time, fra" },
   "venue_cta": { en: "Ask about venue + catering", no: "Sjekk ledige datoer" },
   "venue_call": { en: "Call to check dates", no: "Ring for avtale" },
   

@@ -167,6 +167,36 @@ function Venue({ lang, onQuote }) {
               <div className="lae-venue__body">
                 <Eyebrow>{t("venue_eyebrow", lang)}</Eyebrow>
                 <h2 className="display-lg" style={{ marginTop: 4 }}>{t("venue_title", lang)}</h2>
+                <p style={{ fontSize: "1.05rem", color: "color-mix(in srgb, var(--surface) 80%, transparent)", margin: "14px 0 24px", lineHeight: "1.5" }}>
+                  {t("venue_description", lang)}
+                </p>
+                
+                <div className="lae-venue__stats" style={{ display: "flex", gap: "30px", flexWrap: "wrap", marginBottom: "28px" }}>
+                  <div className="lae-venue__stat">
+                    <b>{t("venue_stat_seated_n", lang)}</b>
+                    <span>{t("venue_stat_seated_txt", lang)}</span>
+                  </div>
+                  <div className="lae-venue__stat">
+                    <b>{t("venue_stat_standing_n", lang)}</b>
+                    <span>{t("venue_stat_standing_txt", lang)}</span>
+                  </div>
+                  <div className="lae-venue__stat">
+                    <b>{t("venue_stat_price_n", lang)} {lang === 'en' ? 'NOK' : 'kr'}</b>
+                    <span>{t("venue_stat_price_txt", lang)}</span>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                  <Button variant="primary" size="md" iconRight="arrow" onClick={onQuote}>
+                    {t("venue_cta", lang)}
+                  </Button>
+                  <a className="lae-btn lae-btn--ghost lae-btn--md" href="tel:+4791586115" 
+                     style={{ color: "#ffffff", borderColor: "rgba(255, 255, 255, 0.3)", display: "inline-flex", alignItems: "center", gap: "8px" }}
+                     onClick={() => track("click_call", { from: "venue" })}>
+                    <Icon name="phone" size={16} />
+                    <span>{t("venue_call", lang)}</span>
+                  </a>
+                </div>
               </div>
               <div className="lae-venue__media" style={{ position: "relative" }}>
                 <img src="/images/venue.webp" alt="Lille Ælling café interior — event space" style={{ width: "100%", height: "100%", minHeight: "280px", objectFit: "cover", display: "block" }} loading="lazy" />
