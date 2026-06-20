@@ -130,18 +130,18 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                   <div className="lae-survey__fields" style={{ gridTemplateColumns: "1fr 1fr" }}>
                     <div className="lae-field">
                       <label htmlFor="sv-name">{t("field_name", lang)}</label>
-                      <input id="sv-name" className="lae-input" value={answers.name} placeholder={lang === 'en' ? "Your full name" : "Ditt fulle navn"}
+                      <input id="sv-name" name="name" autocomplete="name" className="lae-input" value={answers.name} placeholder={lang === 'en' ? "Your full name" : "Ditt fulle navn"}
                         onChange={(e) => set("name", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                     <div className="lae-field">
                       <label htmlFor="sv-email">{t("field_email", lang)}</label>
-                      <input id="sv-email" className="lae-input" value={answers.email} placeholder="you@email.com"
-                        inputMode="email" onChange={(e) => set("email", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                      <input id="sv-email" type="email" name="email" autocomplete="email" className="lae-input" value={answers.email} placeholder="you@email.com"
+                        onChange={(e) => set("email", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">{t("field_phone", lang)} <span className="req">*</span></label>
-                      <input id="sv-phone" className="lae-input" value={answers.phone} placeholder="+47 915 86 115"
-                        inputMode="tel" onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
+                      <input id="sv-phone" type="tel" name="phone" autocomplete="tel" className="lae-input" value={answers.phone} placeholder="+47 915 86 115"
+                        onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
                         style={{ fontSize: "1rem", padding: "13px 14px" }} />
                       {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
                     </div>
@@ -233,6 +233,7 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     if (loading) return;
     const err = {};
     if (!form.name.trim()) err.name = true;
+    if (!form.email.trim() || !form.email.includes("@")) err.email = true;
 
     const digits = form.phone.replace(/\D/g, "");
     if (!digits || digits.length < 8) {
@@ -321,20 +322,25 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
               </div>
             ) : (
               <form className="lae-form" onSubmit={submit} noValidate>
-                <div className="lae-field-grid">
+                <div className="lae-field-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
                   <div className="lae-field">
                     <label htmlFor="f-name">{t("field_name", lang)} <span className="req">*</span></label>
-                    <input id="f-name" className="lae-input" value={form.name} onChange={set("name")}
+                    <input id="f-name" name="name" autocomplete="name" required className="lae-input" value={form.name} onChange={set("name")}
                            placeholder={lang === 'en' ? "Your name" : "Ditt navn"} style={errors.name ? { borderColor: "var(--accent)" } : null} />
                   </div>
                   <div className="lae-field">
+                    <label htmlFor="f-email">{t("field_email", lang)} <span className="req">*</span></label>
+                    <input id="f-email" type="email" name="email" autocomplete="email" required className="lae-input" value={form.email} onChange={set("email")}
+                           placeholder="you@email.com" style={errors.email ? { borderColor: "var(--accent)" } : null} />
+                  </div>
+                  <div className="lae-field">
                     <label htmlFor="f-phone">{t("field_phone", lang)} <span className="req">*</span></label>
-                    <input id="f-phone" className="lae-input" value={form.phone} onChange={set("phone")}
-                           inputMode="tel" placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
+                    <input id="f-phone" type="tel" name="phone" autocomplete="tel" required className="lae-input" value={form.phone} onChange={set("phone")}
+                           placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-guests">{t("field_guests", lang)}</label>
-                    <input id="f-guests" className="lae-input" type="number" min="1" value={form.guests} onChange={set("guests")}
+                    <input id="f-guests" type="number" min="1" name="guests" autocomplete="off" className="lae-input" value={form.guests} onChange={set("guests")}
                            placeholder={lang === 'en' ? "Number of guests" : "Antall gjester"} />
                   </div>
                 </div>

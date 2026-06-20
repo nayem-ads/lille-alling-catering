@@ -85,11 +85,9 @@ function Nav({ lang, setLang, onQuote }) {
 function Hero({ lang, onQuote, onMenus }) {
   return (
     <header className="lae-hero" id="top">
-      {/* Higgsfield cinematic video background */}
-      <div className="lae-hero-video-bg">
-        <video autoPlay muted loop playsInline preload="auto">
-          <source src="/images/hero-video.mp4" type="video/mp4" />
-        </video>
+      {/* Optimized WebP image background */}
+      <div className="lae-hero-image-bg">
+        <img src="/images/hero-bg.webp" alt="Lille Ælling Catering Spread" />
       </div>
       <div className="lae-hero__halo" style={{ width: 520, height: 520, top: -120, right: -80, background: "var(--accent)" }} />
       <div className="lae-hero__halo" style={{ width: 420, height: 420, bottom: -160, left: -120, background: "var(--accent-2)", opacity: .35 }} />
@@ -198,6 +196,9 @@ function IntentSelector({ lang, onTarget }) {
         <div style={{ maxWidth: 640, marginBottom: 32 }}>
           <Reveal><Eyebrow>{t("intent_eyebrow", lang)}</Eyebrow></Reveal>
           <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16 }}>{t("intent_title", lang)}</h2></Reveal>
+          <Reveal delay={140}><p className="lae-lead" style={{ marginTop: 14 }}>
+            {t("intent_description", lang)}
+          </p></Reveal>
         </div>
         <div className="lae-intent-grid">
           {INTENTS.map((it, i) => (
@@ -263,12 +264,14 @@ function MenuSection({ lang, onQuote }) {
                   <span className="slot-tag">{m.no[lang]}</span>
                 </div>
                 <div className="lae-menu-card__body">
-                  <h3 style={{ fontSize: "1.34rem" }}>{m.name[lang]}</h3>
+                  {m.bestFor && <span className="lae-bestfor">{m.bestFor[lang]}</span>}
+                  <h3 style={{ fontSize: "1.34rem", marginTop: 4 }}>{m.name[lang]}</h3>
                   <p className="muted" style={{ fontSize: ".92rem" }}>{m.desc[lang]}</p>
-                  <div className="lae-priceblock" style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                    <span className="lae-price" style={{ fontSize: "1.25rem", fontWeight: 700 }}>
-                      {lang === 'en' ? 'from' : 'fra'} {m.price} {lang === 'en' ? 'NOK/pers' : 'kr/pers'}
+                  <div className="lae-priceblock">
+                    <span className="lae-price">
+                      {lang === 'en' ? 'from' : 'fra'} {m.price} {lang === 'en' ? 'NOK' : 'kr'}
                     </span>
+                    {m.unit && <span className="lae-unit">/ {m.unit[lang]}</span>}
                   </div>
                   <a className="lae-menu-card__cta" href="#quote" data-analytics="view_menu"
                      onClick={(e) => { e.preventDefault(); onQuote(m.name.en); }}>

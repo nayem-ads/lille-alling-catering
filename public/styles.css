@@ -224,8 +224,8 @@ image-slot {
 @media (max-width: 560px){ .lae-event-card { left: 50%; transform: translateX(-50%); width: min(330px, 92%); } }
 
 /* ---- Intent cards -------------------------------------------------------- */
-.lae-intent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-@media (max-width: 1080px){ .lae-intent-grid { grid-template-columns: repeat(4, 1fr); } }
+.lae-intent-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+@media (max-width: 1080px){ .lae-intent-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 760px){ .lae-intent-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
 @media (max-width: 400px){ .lae-intent-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
 .lae-intent { display: flex; flex-direction: column; gap: 12px; padding: 22px 20px 18px; border-radius: var(--r-md);
@@ -493,6 +493,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
 @media (max-width: 760px) {
   .lae-section { padding-block: clamp(40px, 7vw, 72px); }
   .lae-section--tight { padding-block: clamp(30px, 5vw, 54px); }
+  .hide-on-mobile { display: none !important; }
   /* Hide the local/delivery radius map on very small screens to cut fluff */
   .lae-radius { max-height: 200px; }
   /* Bigger mobile CTA buttons */
@@ -680,7 +681,7 @@ select.lae-input { appearance: none; background-image: url("data:image/svg+xml,%
     padding-bottom: 12px !important;
   }
   .lae-hero h1 {
-    font-family: 'Playfair Display', Georgia, serif !important;
+    font-family: var(--font-display) !important;
     font-size: 33px !important; /* Elegant, large display serif */
     font-weight: 700 !important;
     line-height: 1.12 !important;

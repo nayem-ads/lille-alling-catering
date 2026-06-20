@@ -4,7 +4,8 @@
   "description": "Lille Ælling Catering landing page with lead capture backend",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "build": "node build.js",
+    "start": "node build.js && node server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
@@ -16,6 +17,9 @@
     "helmet": "^7.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-react": "^7.22.15",
     "nodemon": "^3.0.2"
   },
   "engines": {

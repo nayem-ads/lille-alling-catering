@@ -403,8 +403,8 @@ const LOCALIZATION = {
 
   // Hero
   "hero_tagline": { en: "Boutique catering in Drammen · Response within 2 hours", no: "Boutique-catering i Drammen · Svar innen 2 timer" },
-  "hero_title_1": { en: "Local catering ", no: "Lokal catering " },
-  "hero_title_2": { en: "by the river", no: "ved Drammenselva" },
+  "hero_title_1": { en: "Fresh, homemade catering ", no: "Fersk, hjemmelaget catering " },
+  "hero_title_2": { en: "delivered to your door", no: "levert rett på døren" },
   "hero_title_3": { en: " in\u00a0Drammen", no: " i\u00a0Drammen" },
   "hero_description": { 
     en: "Freshly prepared food for meetings, events and birthdays — made the same day in our café by the river.", 

@@ -78,6 +78,21 @@ function LocalTrust({ lang }) {
           <div>
             <Reveal><Eyebrow>{t("local_eyebrow", lang)}</Eyebrow></Reveal>
             <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16 }}>{t("local_title", lang)}</h2></Reveal>
+            <Reveal delay={140}>
+              <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 4 }}>
+                {LOCAL_FACTS.map((f) => (
+                  <div key={f.title.en} className="lae-fact">
+                    <div className="lae-fact__ico">
+                      <Icon name={f.icon} size={20} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: "1.02rem", fontWeight: 650, margin: 0 }}>{f.title[lang]}</h4>
+                      <p style={{ margin: "2px 0 0", fontSize: "0.9rem", color: "var(--ink-soft)" }}>{f.copy[lang]}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
           </div>
         </div>
       </div>
