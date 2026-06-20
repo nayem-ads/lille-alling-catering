@@ -254,6 +254,71 @@ const MENU_ITEMS = [
     tags: ["Meeting food"],
     tone: "accent",
   },
+  {
+    name: { en: "Dessert Selection", no: "Dessertutvalg" },
+    no: { en: "Dessert", no: "Dessert" },
+    price: 55,
+    unit: { en: "per person", no: "per person" },
+    bestFor: { en: "Sweet endings", no: "Etter maten" },
+    desc: { 
+      en: "Delicious house desserts, from rich red velvet to chocolate mousse cups.", 
+      no: "Hjemmelagde desserter fra vårt kjøkken, fra klassisk red velvet til sjokolademousse." 
+    },
+    tags: ["Cakes & dessert"],
+    tone: "sage",
+  },
+  {
+    name: { en: "Varm drikke", no: "Varm drikke" },
+    no: { en: "Drikke", no: "Drikke" },
+    price: 40,
+    unit: { en: "per person", no: "per person" },
+    bestFor: { en: "Meetings & events", no: "Møter & samlinger" },
+    desc: { 
+      en: "Freshly brewed specialty coffee and organic tea served hot.", 
+      no: "Nytraktet kvalitetskaffe og økologisk te, levert varm til ditt møte." 
+    },
+    tags: ["Meeting food", "Private events"],
+    tone: "accent",
+  },
+  {
+    name: { en: "Kald drikke", no: "Kald drikke" },
+    no: { en: "Drikke", no: "Drikke" },
+    price: 45,
+    unit: { en: "per bottle", no: "per flaske" },
+    bestFor: { en: "Refreshing additions", no: "Tilbehør til maten" },
+    desc: { 
+      en: "A selection of chilled sodas, local apple juice, and sparkling water.", 
+      no: "Et utvalg av kalde mineralvann, lokal eplemost og farris." 
+    },
+    tags: ["Meeting food", "Private events"],
+    tone: "sage",
+  },
+  {
+    name: { en: "Møterom & lokale", no: "Møterom & lokale" },
+    no: { en: "Lokale", no: "Lokale" },
+    price: 500,
+    unit: { en: "per hour", no: "per time" },
+    bestFor: { en: "Corporate & private parties", no: "Møter & lukkede selskap" },
+    desc: { 
+      en: "Rent our cozy café venue for your private dinner, board meeting or confirmation.", 
+      no: "Lei våre koselige lokaler til ditt møte, minnestund eller private feiring." 
+    },
+    tags: ["Private events"],
+    tone: "accent",
+  },
+  {
+    name: { en: "Tillegg & tilbehør", no: "Tillegg & tilbehør" },
+    no: { en: "Tillegg", no: "Tillegg" },
+    price: 49,
+    unit: { en: "per person", no: "per person" },
+    bestFor: { en: "Side dishes", no: "Ekstra tilbehør" },
+    desc: { 
+      en: "Extra focaccia, aioli, chips, salad or potatoes to complete your meal.", 
+      no: "Ekstra focaccia, aioli, chips, salat eller poteter for å fullføre måltidet." 
+    },
+    tags: ["Private events"],
+    tone: "butter",
+  },
 ];
 
 // ---- How it works ----------------------------------------------------------

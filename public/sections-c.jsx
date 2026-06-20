@@ -23,6 +23,8 @@ const getTodayDateString = () => {
   return `${yyyy}-${mm}-${dd}`;
 };
 
+const sessionId = 'sess_' + Math.random().toString(36).substring(2, 11);
+
 function QuickSurvey({ lang, onQuote, onComplete }) {
   const [step, setStepS] = useStateC(1);
   const [answers, setAnswers] = useStateC({ occasion: "", guests: "", date: getTodayDateString(), name: "", phone: "+47 ", address: "", message: "" });
@@ -36,6 +38,35 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
 
   const next = () => setStepS((s) => Math.min(s + 1, TOTAL_STEPS));
   const back = () => setStepS((s) => Math.max(s - 1, 1));
+
+  const sendSurveyPartialLead = async (currentAnswers) => {
+    const digits = currentAnswers.phone.replace(/\D/g, "");
+    if (digits.length >= 8) {
+      const payload = {
+        name: currentAnswers.name,
+        phone: currentAnswers.phone,
+        email: "",
+        address: currentAnswers.address,
+        date: currentAnswers.date || getTodayDateString(),
+        guests: currentAnswers.guests,
+        eventType: currentAnswers.occasion,
+        menus: [],
+        fulfil: "Delivery",
+        notes: "",
+        message: currentAnswers.message,
+        source: "survey_funnel_auto_capture",
+        sessionId,
+        partial: true
+      };
+      try {
+        await fetch("/api/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) {}
+    }
+  };
 
   const submit = async () => {
     let hasErr = false;
@@ -78,7 +109,9 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
       fulfil: "Delivery",
       notes: "",
       message: answers.message,
-      source: "survey_funnel"
+      source: "survey_funnel",
+      sessionId,
+      partial: false
     };
 
     track("submit_quote", { eventType: payload.eventType, guests: payload.guests, fulfil: payload.fulfil, menus: "" });
@@ -195,26 +228,33 @@ function QuickSurvey({ lang, onQuote, onComplete }) {
                     <div className="lae-field">
                       <label htmlFor="sv-name">{t("field_name", lang)} <span className="req">*</span></label>
                       <input id="sv-name" name="name" autocomplete="name" className="lae-input" value={answers.name} placeholder={lang === 'en' ? "Your full name" : "Ditt fulle navn"}
-                        onChange={(e) => { set("name", e.target.value); setNameErr(""); }} style={{ fontSize: "1rem", padding: "13px 14px", ...(nameErr ? { borderColor: "var(--accent)" } : null) }} />
+                        onChange={(e) => { set("name", e.target.value); setNameErr(""); }}
+                        onBlur={() => sendSurveyPartialLead(answers)}
+                        style={{ fontSize: "1rem", padding: "13px 14px", ...(nameErr ? { borderColor: "var(--accent)" } : null) }} />
                       {nameErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{nameErr}</span>}
                     </div>
                     <div className="lae-field">
                       <label htmlFor="sv-address">{t("field_address", lang)} <span className="req">*</span></label>
                       <input id="sv-address" name="address" autocomplete="street-address" className="lae-input" value={answers.address} placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"}
-                        onChange={(e) => { set("address", e.target.value); setAddressErr(""); }} style={{ fontSize: "1rem", padding: "13px 14px", ...(addressErr ? { borderColor: "var(--accent)" } : null) }} />
+                        onChange={(e) => { set("address", e.target.value); setAddressErr(""); }}
+                        onBlur={() => sendSurveyPartialLead(answers)}
+                        style={{ fontSize: "1rem", padding: "13px 14px", ...(addressErr ? { borderColor: "var(--accent)" } : null) }} />
                       {addressErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{addressErr}</span>}
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-phone">{t("field_phone", lang)} <span className="req">*</span></label>
                       <input id="sv-phone" type="tel" name="phone" autocomplete="tel" className="lae-input" value={answers.phone} placeholder="+47 915 86 115"
                         onChange={(e) => { set("phone", e.target.value); setPhoneErr(""); }}
+                        onBlur={() => sendSurveyPartialLead(answers)}
                         style={{ fontSize: "1rem", padding: "13px 14px", ...(phoneErr ? { borderColor: "var(--accent)" } : null) }} />
                       {phoneErr && <span style={{ fontSize: ".8rem", color: "var(--accent)", marginTop: 4 }}>{phoneErr}</span>}
                     </div>
                     <div className="lae-field" style={{ gridColumn: "1 / -1" }}>
                       <label htmlFor="sv-message">{t("field_msg", lang)} <span className="muted" style={{ fontWeight: 400 }}>({lang === 'en' ? 'optional' : 'valgfritt'})</span></label>
                       <input id="sv-message" name="message" className="lae-input" value={answers.message} placeholder={lang === 'en' ? "Any additional comments..." : "Eventuelle ønsker eller kommentarer..."}
-                        onChange={(e) => set("message", e.target.value)} style={{ fontSize: "1rem", padding: "13px 14px" }} />
+                        onChange={(e) => set("message", e.target.value)}
+                        onBlur={() => sendSurveyPartialLead(answers)}
+                        style={{ fontSize: "1rem", padding: "13px 14px" }} />
                     </div>
                   </div>
                   <div className="lae-survey__nav" style={{ marginTop: 24 }}>
@@ -313,6 +353,28 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const sendPartialLead = async (currentForm) => {
+    const digits = currentForm.phone.replace(/\D/g, "");
+    if (digits.length >= 8) {
+      const payload = {
+        ...currentForm,
+        eventType: surveyData ? surveyData.occasion : (currentForm.eventType || ""),
+        date: currentForm.date || (surveyData ? surveyData.date : getTodayDateString()),
+        email: currentForm.email || (surveyData ? surveyData.email : ""),
+        source: "quote_form_auto_capture",
+        sessionId,
+        partial: true
+      };
+      try {
+        await fetch("/api/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) {}
+    }
+  };
+
   const submit = async (e) => {
     e.preventDefault();
     if (loading) return;
@@ -336,7 +398,9 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
       eventType: surveyData ? surveyData.occasion : (form.eventType || ""),
       date: form.date || (surveyData ? surveyData.date : getTodayDateString()),
       email: form.email || (surveyData ? surveyData.email : ""),
-      source: "quote_form"
+      source: "quote_form",
+      sessionId,
+      partial: false
     };
 
     track("submit_quote", { eventType: payload.eventType, guests: payload.guests, fulfil: payload.fulfil, menus: payload.menus.join(", ") });
@@ -365,12 +429,15 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
     <section className="lae-section" id="quote" ref={ref}>
       <div className="lae-wrap">
         <div className="lae-form-shell">
-          <div>
+          <div className="lae-form-header">
             <Reveal><Eyebrow>{t("form_eyebrow", lang)}</Eyebrow></Reveal>
             <Reveal delay={80}><h2 className="display-lg" style={{ marginTop: 16 }}>{t("form_title", lang)}</h2></Reveal>
             <Reveal delay={140}><p className="lae-lead" style={{ marginTop: 14 }}>
               {t("form_description", lang)}
             </p></Reveal>
+          </div>
+
+          <div className="lae-form-contact">
             <Reveal delay={200}>
               <div className="lae-card" style={{ marginTop: 26, padding: "20px 22px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -393,79 +460,87 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
             </Reveal>
           </div>
 
-          <Reveal delay={120}>
-            {sent ? (
-              <div className="lae-form" style={{ display: "grid", placeItems: "center", textAlign: "center", minHeight: 320, gap: 14 }}>
-                <span style={{ width: 64, height: 64, borderRadius: "50%", display: "grid", placeItems: "center", background: "color-mix(in srgb, var(--accent-2) 22%, var(--surface))", color: "var(--accent-2)" }}>
-                  <Icon name="check" size={32} />
-                </span>
-                <h3 className="display-md">
-                  {lang === 'en' ? `Thanks, ${form.name}! We'll call you soon with a menu proposal.` : `Takk, ${form.name}! Vi ringer deg snart med menyforslag.`}
-                </h3>
-                <p className="muted" style={{ maxWidth: "40ch" }}>
-                  {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
-                </p>
-                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", eventType: "", date: getTodayDateString(), guests: "" })); }}>{t("form_success_another", lang)}</Button>
-              </div>
-            ) : (
-              <form className="lae-form" onSubmit={submit} noValidate>
-                <div className="lae-field-grid">
-                  <div className="lae-field">
-                    <label htmlFor="f-name">{t("field_name", lang)} <span className="req">*</span></label>
-                    <input id="f-name" name="name" autocomplete="name" required className="lae-input" value={form.name} onChange={set("name")}
-                           placeholder={lang === 'en' ? "Your name" : "Ditt navn"} style={errors.name ? { borderColor: "var(--accent)" } : null} />
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-phone">{t("field_phone", lang)} <span className="req">*</span></label>
-                    <input id="f-phone" type="tel" name="phone" autocomplete="tel" required className="lae-input" value={form.phone} onChange={set("phone")}
-                           placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
-                  </div>
-                  <div className="lae-field col-2">
-                    <label htmlFor="f-address">{t("field_address", lang)} <span className="req">*</span></label>
-                    <input id="f-address" name="address" autocomplete="street-address" required className="lae-input" value={form.address} onChange={set("address")}
-                           placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"} style={errors.address ? { borderColor: "var(--accent)" } : null} />
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-event-type">{t("field_type", lang)}</label>
-                    <select id="f-event-type" name="eventType" className="lae-input" value={form.eventType} onChange={set("eventType")}>
-                      <option value="">{t("field_choose", lang)}</option>
-                      {getEventTypes(lang).map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-date">{t("field_date", lang)} <span className="req">*</span></label>
-                    <div style={{ position: "relative" }}>
-                      <input id="f-date" type="date" ref={leadDateRef} name="date" required className="lae-input" value={form.date} onChange={set("date")}
-                             onClick={(e) => { try { e.target.showPicker(); } catch (_) {} }}
-                             style={{ paddingRight: "44px", ...(errors.date ? { borderColor: "var(--accent)" } : null) }} />
-                      <span onClick={handleLeadDateIconClick} style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", cursor: "pointer", display: "flex", alignItems: "center" }}>
-                        <Icon name="calendar" size={20} />
-                      </span>
+          <div className="lae-form-body">
+            <Reveal delay={120}>
+              {sent ? (
+                <div className="lae-form" style={{ display: "grid", placeItems: "center", textAlign: "center", minHeight: 320, gap: 14 }}>
+                  <span style={{ width: 64, height: 64, borderRadius: "50%", display: "grid", placeItems: "center", background: "color-mix(in srgb, var(--accent-2) 22%, var(--surface))", color: "var(--accent-2)" }}>
+                    <Icon name="check" size={32} />
+                  </span>
+                  <h3 className="display-md">
+                    {lang === 'en' ? `Thanks, ${form.name}! We'll call you soon with a menu proposal.` : `Takk, ${form.name}! Vi ringer deg snart med menyforslag.`}
+                  </h3>
+                  <p className="muted" style={{ maxWidth: "40ch" }}>
+                    {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
+                  </p>
+                  <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", eventType: "", date: getTodayDateString(), guests: "" })); }}>{t("form_success_another", lang)}</Button>
+                </div>
+              ) : (
+                <form className="lae-form" onSubmit={submit} noValidate>
+                  <div className="lae-field-grid">
+                    <div className="lae-field">
+                      <label htmlFor="f-guests">{t("field_guests", lang)}</label>
+                      <input id="f-guests" type="number" min="1" name="guests" autocomplete="off" className="lae-input" value={form.guests} onChange={set("guests")} onBlur={() => sendPartialLead(form)}
+                             placeholder={lang === 'en' ? "Number of guests" : "Antall gjester"} />
+                    </div>
+                    <div className="lae-field">
+                      <label htmlFor="f-event-type">{t("field_type", lang)}</label>
+                      <select id="f-event-type" name="eventType" className="lae-input" value={form.eventType} onChange={set("eventType")} onBlur={() => sendPartialLead(form)}>
+                        <option value="">{t("field_choose", lang)}</option>
+                        {getEventTypes(lang).map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="lae-field">
+                      <label htmlFor="f-name">{t("field_name", lang)} <span className="req">*</span></label>
+                      <input id="f-name" name="name" autocomplete="name" required className="lae-input" value={form.name} onChange={set("name")} onBlur={() => sendPartialLead(form)}
+                             placeholder={lang === 'en' ? "Your name" : "Ditt navn"} style={errors.name ? { borderColor: "var(--accent)" } : null} />
+                    </div>
+                    <div className="lae-field">
+                      <label htmlFor="f-phone">{t("field_phone", lang)} <span className="req">*</span></label>
+                      <input id="f-phone" type="tel" name="phone" autocomplete="tel" required className="lae-input" value={form.phone} onChange={set("phone")} onBlur={() => sendPartialLead(form)}
+                             placeholder="+47 915 86 115" style={errors.phone ? { borderColor: "var(--accent)" } : null} />
+                    </div>
+                    <div className="lae-field col-2">
+                      <label htmlFor="f-address">{t("field_address", lang)} <span className="req">*</span></label>
+                      <input id="f-address" name="address" autocomplete="street-address" required className="lae-input" value={form.address} onChange={set("address")} onBlur={() => sendPartialLead(form)}
+                             placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"} style={errors.address ? { borderColor: "var(--accent)" } : null} />
+                    </div>
+                    <div className="lae-field">
+                      <label htmlFor="f-date">{t("field_date", lang)} <span className="req">*</span></label>
+                      <div style={{ position: "relative" }}>
+                        <input id="f-date" type="date" ref={leadDateRef} name="date" required className="lae-input" value={form.date} onChange={set("date")}
+                               onClick={(e) => { try { e.target.showPicker(); } catch (_) {} }}
+                               onBlur={() => sendPartialLead(form)}
+                               style={{ paddingRight: "44px", ...(errors.date ? { borderColor: "var(--accent)" } : null) }} />
+                        <span onClick={handleLeadDateIconClick} style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--accent)", cursor: "pointer", display: "flex", alignItems: "center" }}>
+                          <Icon name="calendar" size={20} />
+                        </span>
+                      </div>
+                    </div>
+                    <div className="lae-field col-2">
+                      <label htmlFor="f-message">{t("field_msg", lang)}</label>
+                      <textarea id="f-message" name="message" className="lae-input" value={form.message} onChange={set("message")} onBlur={() => sendPartialLead(form)}
+                                placeholder={lang === 'en' ? "Tell us about your event details or special requests..." : "Fortell oss litt om arrangementet eller spesielle ønsker..."} />
                     </div>
                   </div>
-                  <div className="lae-field">
-                    <label htmlFor="f-guests">{t("field_guests", lang)}</label>
-                    <input id="f-guests" type="number" min="1" name="guests" autocomplete="off" className="lae-input" value={form.guests} onChange={set("guests")}
-                           placeholder={lang === 'en' ? "Number of guests" : "Antall gjester"} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginTop: 20 }}>
+                    <Button variant="primary" size="lg" type="submit" className="lae-form-submit-btn" iconRight={loading ? null : "arrow"} data-analytics="submit_quote" disabled={loading} style={{ width: "100%" }}>
+                      {loading ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
+                          <span className="lae-spinner" /> {lang === 'en' ? "Sending..." : "Sender..."}
+                        </span>
+                      ) : (
+                        t("field_submit", lang)
+                      )}
+                    </Button>
+                    <span className="muted" style={{ fontSize: ".88rem", textAlign: "center", width: "100%" }}>{t("field_footer_note", lang)}</span>
                   </div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", marginTop: 20 }}>
-                  <Button variant="primary" size="lg" type="submit" className="lae-form-submit-btn" iconRight={loading ? null : "arrow"} data-analytics="submit_quote" disabled={loading} style={{ width: "100%" }}>
-                    {loading ? (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
-                        <span className="lae-spinner" /> {lang === 'en' ? "Sending..." : "Sender..."}
-                      </span>
-                    ) : (
-                      t("field_submit", lang)
-                    )}
-                  </Button>
-                  <span className="muted" style={{ fontSize: ".88rem", textAlign: "center", width: "100%" }}>{t("field_footer_note", lang)}</span>
-                </div>
-              </form>
-            )}
-          </Reveal>
+                </form>
+              )}
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

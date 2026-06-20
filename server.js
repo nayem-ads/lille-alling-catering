@@ -56,13 +56,17 @@ pool.query(`
     notes TEXT,
     message TEXT,
     source TEXT DEFAULT 'quote_form',
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    session_id TEXT,
+    partial BOOLEAN DEFAULT FALSE
   )
 `).then(async () => {
   console.log('✅ DB table ready');
   try {
     await pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS address TEXT;`);
-    console.log('✅ DB column "address" verified/added');
+    await pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS session_id TEXT;`);
+    await pool.query(`ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS partial BOOLEAN DEFAULT FALSE;`);
+    console.log('✅ DB columns "session_id" and "partial" verified/added');
   } catch (alterErr) {
     console.error('⚠️ DB alter table warning:', alterErr.message);
   }
@@ -80,11 +84,66 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// In-memory object to keep track of partial lead timers
+const activeTimeouts = {};
+
+// Helper function to format and send lead notification email
+async function sendInquiryEmail(lead, isAbandonedPartial) {
+  const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no, nayem.adsmanager@gmail.com';
+  const menusList = lead.menus || '';
+  
+  const subject = isAbandonedPartial
+    ? `⚠️ [ABANDONED LEAD] — Phone: ${lead.phone || '—'} · ${lead.name || 'Anonymous'}`
+    : `🦆 New catering inquiry — ${lead.event_type || 'General'} · ${lead.name || 'Anonymous'}`;
+
+  const headerTitle = isAbandonedPartial
+    ? `⚠️ Captured Partial Lead (Abandoned)`
+    : `🦆 New Catering Inquiry`;
+  const headerSubtitle = isAbandonedPartial
+    ? `Customer filled info but did not submit`
+    : `Received via lilleelling.no`;
+
+  await transporter.sendMail({
+    from: `"Lille Ælling Website" <${process.env.SENDER_EMAIL || process.env.SMTP_USER}>`,
+    to: recipientEmail,
+    subject: subject,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#F4EAD7;border-radius:12px;overflow:hidden">
+        <div style="background:#271F18;padding:24px 28px">
+          <h2 style="color:#F4EAD7;margin:0;font-size:1.3rem">${headerTitle}</h2>
+          <p style="color:#BC6B38;margin:4px 0 0;font-size:.9rem">${headerSubtitle}</p>
+        </div>
+        <div style="padding:28px">
+          <table style="width:100%;border-collapse:collapse">
+            ${row('Name', lead.name)}
+            ${row('Phone', lead.phone ? `<a href="tel:${lead.phone}">${lead.phone}</a>` : '—')}
+            ${row('Email', lead.email ? `<a href="mailto:${lead.email}">${lead.email}</a>` : '—')}
+            ${row('Address', lead.address)}
+            ${row('Event type', lead.event_type)}
+            ${row('Event date', lead.event_date)}
+            ${row('Guests', lead.guests)}
+            ${row('Menus interested in', menusList)}
+            ${row('Delivery/Pickup', lead.fulfil)}
+            ${row('Allergies / notes', lead.notes)}
+            ${row('Message', lead.message)}
+            ${row('Source', lead.source)}
+          </table>
+          <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(39,31,24,.15)">
+            <a href="tel:${lead.phone}" style="display:inline-block;background:#BC6B38;color:#fff;padding:12px 22px;border-radius:100px;text-decoration:none;font-weight:bold">
+              Call ${lead.name || 'customer'}
+            </a>
+          </div>
+        </div>
+      </div>
+    `,
+  });
+}
+
 // ── Routes ────────────────────────────────────────────────────────────────────
 
-// Main quote form submission
+// Main quote form submission and smart auto-capture lead abandonment
 app.post('/api/quote', async (req, res) => {
-  const { name, phone, email, address, date, guests, eventType, menus, fulfil, notes, message, source } = req.body;
+  const { name, phone, email, address, date, guests, eventType, menus, fulfil, notes, message, source, sessionId, partial } = req.body;
 
   // Basic validation
   if (!phone) {
@@ -92,53 +151,64 @@ app.post('/api/quote', async (req, res) => {
   }
 
   try {
-    // Save to DB
-    await pool.query(
-      `INSERT INTO inquiries (name, phone, email, address, event_date, guests, event_type, menus, fulfil, notes, message, source)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-      [name, phone, email, address, date, guests, eventType,
-       Array.isArray(menus) ? menus.join(', ') : menus,
-       fulfil, notes, message, source || 'quote_form']
-    );
+    let existing = null;
+    if (sessionId) {
+      const resDb = await pool.query('SELECT id, partial FROM inquiries WHERE session_id = $1 LIMIT 1', [sessionId]);
+      if (resDb.rows.length > 0) {
+        existing = resDb.rows[0];
+      }
+    }
 
-    // Send notification email
-    const recipientEmail = process.env.RECIPIENT_EMAIL || 'post@lilleelling.no, nayem.adsmanager@gmail.com';
-    const menusList = Array.isArray(menus) ? menus.join(', ') : menus;
+    const menusList = Array.isArray(menus) ? menus.join(', ') : (menus || '');
 
-    await transporter.sendMail({
-      from: `"Lille Ælling Website" <${process.env.SENDER_EMAIL || process.env.SMTP_USER}>`,
-      to: recipientEmail,
-      subject: `🦆 New catering inquiry — ${eventType || 'General'} · ${name || 'Anonymous'}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#F4EAD7;border-radius:12px;overflow:hidden">
-          <div style="background:#271F18;padding:24px 28px">
-            <h2 style="color:#F4EAD7;margin:0;font-size:1.3rem">🦆 New Catering Inquiry</h2>
-            <p style="color:#BC6B38;margin:4px 0 0;font-size:.9rem">Received via lilleelling.no</p>
-          </div>
-          <div style="padding:28px">
-            <table style="width:100%;border-collapse:collapse">
-              ${row('Name', name)}
-              ${row('Phone', phone ? `<a href="tel:${phone}">${phone}</a>` : '—')}
-              ${row('Email', email ? `<a href="mailto:${email}">${email}</a>` : '—')}
-              ${row('Address', address)}
-              ${row('Event type', eventType)}
-              ${row('Event date', date)}
-              ${row('Guests', guests)}
-              ${row('Menus interested in', menusList)}
-              ${row('Delivery/Pickup', fulfil)}
-              ${row('Allergies / notes', notes)}
-              ${row('Message', message)}
-              ${row('Source', source || 'quote_form')}
-            </table>
-            <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(39,31,24,.15)">
-              <a href="tel:${phone}" style="display:inline-block;background:#BC6B38;color:#fff;padding:12px 22px;border-radius:100px;text-decoration:none;font-weight:bold">
-                Call ${name || 'customer'}
-              </a>
-            </div>
-          </div>
-        </div>
-      `,
-    });
+    if (existing) {
+      await pool.query(
+        `UPDATE inquiries SET name=$1, phone=$2, email=$3, address=$4, event_date=$5, guests=$6, event_type=$7, menus=$8, fulfil=$9, notes=$10, message=$11, source=$12, partial=$13 WHERE id = $14`,
+        [name, phone, email, address, date, guests, eventType,
+         menusList, fulfil, notes, message, source || 'quote_form', partial || false, existing.id]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO inquiries (name, phone, email, address, event_date, guests, event_type, menus, fulfil, notes, message, source, session_id, partial)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
+        [name, phone, email, address, date, guests, eventType,
+         menusList, fulfil, notes, message, source || 'quote_form', sessionId || null, partial || false]
+      );
+    }
+
+    // Capture timing management
+    if (sessionId && activeTimeouts[sessionId]) {
+      clearTimeout(activeTimeouts[sessionId]);
+      delete activeTimeouts[sessionId];
+    }
+
+    if (partial) {
+      // Setup timeout for 45 seconds to check abandonment
+      activeTimeouts[sessionId] = setTimeout(async () => {
+        try {
+          const latestRes = await pool.query('SELECT * FROM inquiries WHERE session_id = $1 LIMIT 1', [sessionId]);
+          if (latestRes.rows.length > 0) {
+            const lead = latestRes.rows[0];
+            // Send email only if it is still marked as partial
+            if (lead.partial) {
+              await sendInquiryEmail(lead, true);
+            }
+          }
+        } catch (emailErr) {
+          console.error('Auto-capture email timeout error:', emailErr.message);
+        } finally {
+          delete activeTimeouts[sessionId];
+        }
+      }, 45000);
+    } else {
+      // Final submission: retrieve the full db row or just use the payload
+      const latestRes = await pool.query('SELECT * FROM inquiries WHERE session_id = $1 LIMIT 1', [sessionId]);
+      const leadData = latestRes.rows.length > 0 ? latestRes.rows[0] : {
+        name, phone, email, address, event_date: date, guests, event_type: eventType,
+        menus: menusList, fulfil, notes, message, source: source || 'quote_form'
+      };
+      await sendInquiryEmail(leadData, false);
+    }
 
     res.json({ ok: true });
   } catch (err) {
