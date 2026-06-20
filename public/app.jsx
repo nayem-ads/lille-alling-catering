@@ -147,7 +147,6 @@ function App() {
       </main>
       <Footer lang={lang} />
 
-      <FloatCard lang={lang} onOpen={(type) => goQuote(type)} />
       <MobileBar lang={lang} onQuote={() => goQuote()} onMenus={goMenus} />
 
       <TweaksPanel title="Tweaks">

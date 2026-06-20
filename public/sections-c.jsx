@@ -321,7 +321,7 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
                 <p className="muted" style={{ maxWidth: "40ch" }}>
                   {t("form_success_desc", lang)} <a className="accent" href="tel:+4791586115">+47 915 86 115</a>.
                 </p>
-                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", date: "", guests: "" })); }}>{t("form_success_another", lang)}</Button>
+                <Button variant="ghost" onClick={() => { setSent(false); setForm(f => ({ ...f, name: "", phone: "+47 ", address: "", eventType: "", date: "", guests: "" })); }}>{t("form_success_another", lang)}</Button>
               </div>
             ) : (
               <form className="lae-form" onSubmit={submit} noValidate>
@@ -340,6 +340,15 @@ function LeadForm({ lang, seed, onSeedConsumed, surveyData }) {
                     <label htmlFor="f-address">{t("field_address", lang)} <span className="req">*</span></label>
                     <input id="f-address" name="address" autocomplete="street-address" required className="lae-input" value={form.address} onChange={set("address")}
                            placeholder={lang === 'en' ? "Delivery address" : "Leveringsadresse"} style={errors.address ? { borderColor: "var(--accent)" } : null} />
+                  </div>
+                  <div className="lae-field">
+                    <label htmlFor="f-event-type">{t("field_type", lang)}</label>
+                    <select id="f-event-type" name="eventType" className="lae-input" value={form.eventType} onChange={set("eventType")}>
+                      <option value="">{t("field_choose", lang)}</option>
+                      {getEventTypes(lang).map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div className="lae-field">
                     <label htmlFor="f-date">{t("field_date", lang)} <span className="req">*</span></label>
